@@ -1,0 +1,69 @@
+from typing import Iterable
+from django.db import models
+
+class College(models.Model):
+    Name=[
+        ('Vels','Vels_University'),
+        ('Crescent','Crescent')
+    ]
+    name=models.CharField(max_length=300,choices=Name)
+    
+    def __str__(self):
+        return self.name
+
+class Program(models.Model):
+    class Meta:
+        permissions = [
+            ("view_specific_data", "Can view specific data"),  #Custom Permission for Admin
+            # Add more permissions as needed
+        ]
+    college=models.ForeignKey(College,on_delete=models.PROTECT)
+    Year=[
+        (1,1),
+        (2,2),
+        (3,3),
+        (4,4),
+    ]
+    
+    name=models.CharField(max_length=300)
+    year=models.SmallIntegerField(choices=Year,default=1)
+
+    def __str__(self):
+        return self.name
+    
+class Course(models.Model):
+    class Meta:
+        permissions = [
+            ("view_specific_data", "Can view specific data"),
+            # Add more permissions as needed
+        ]
+    college=models.ForeignKey(College,on_delete=models.PROTECT)
+    program=models.ForeignKey(Program,on_delete=models.PROTECT)
+    name=models.CharField(max_length=300)
+    
+    def save(self,*args,**kwargs):
+        self.college=self.program.college
+        super().save(*args,**kwargs,update_fields=['college'])
+        
+    def __str__(self):
+        return self.name
+    
+class CourseItem(models.Model):
+    class Meta:
+        permissions = [
+            ("view_specific_data", "Can view specific data"),
+            # Add more permissions as needed
+        ]
+    college=models.ForeignKey(College,on_delete=models.PROTECT)
+    course=models.ForeignKey(Course,on_delete=models.PROTECT)
+    description=models.TextField()
+    pdf=models.FileField(upload_to='path-to-file')
+    videos=models.FileField()
+    
+    def save(self,*args,**kwargs):
+        self.college=self.course.college
+        super().save(*args,**kwargs,update_fields=['college'])
+        
+    def __str__(self):
+        return f"{self.course}-item"
+    
