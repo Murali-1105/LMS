@@ -15,19 +15,25 @@ class College(models.Model):
         return self.name
 
 class Program(models.Model):
+    class Meta:
+        permissions = [
+            ("view_specific_data", "Can view specific data"),  #Custom Permission for Admin
+            # Add more permissions as needed
+        ]
     college = models.ForeignKey(College, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
     year = models.SmallIntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4')], default=1)
-    students = models.ManyToManyField('users.User', related_name='programs')
+    user = models.ManyToManyField('users.User', related_name='programs')  
 
     def __str__(self):
         return f"{self.name}-{self.college}"
 
 class Course(models.Model):
+    
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
-    students = models.ManyToManyField('users.User', related_name='courses')
+    user = models.ManyToManyField('users.User', related_name='courses')
 
     def save(self, *args, **kwargs):
         self.college = self.program.college
@@ -37,11 +43,13 @@ class Course(models.Model):
         return self.name
 
 class CourseItem(models.Model):
+ 
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
     description = models.TextField()
     pdf = models.FileField(upload_to='path-to-file')
     videos = models.FileField()
+    
 
     def save(self, *args, **kwargs):
         self.college = self.course.college
