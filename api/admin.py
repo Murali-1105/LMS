@@ -31,7 +31,7 @@ class ProgramAdmin(admin.ModelAdmin):
         if request.user.has_perm('api.view_specific_data') and request.user.user_type=='admin':
             queryset=queryset.filter(college=request.user.college)
             print(queryset)
-            return queryset
+        return queryset
 
     
 class CourseAdmin(admin.ModelAdmin):
@@ -79,9 +79,6 @@ class CourseItemAdmin(admin.ModelAdmin):
             queryset=queryset.filter(college__name=request.user.user_type)
         return queryset
     
-
-
-
 
 admin.site.register(College)
 admin.site.register(Program,ProgramAdmin)

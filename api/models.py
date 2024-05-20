@@ -9,17 +9,13 @@ class College(models.Model):
          ("Malla Reddy","Malla Reddy"),
      ]
     
-    name = models.CharField(max_length=100, choices=Name,editable=False)
+    name = models.CharField(max_length=100, choices=Name)
     
     def __str__(self):
         return self.name
 
 class Program(models.Model):
-    class Meta:
-        permissions = [
-            ("view_specific_data", "Can view specific data"),  #Custom Permission for Admin
-            # Add more permissions as needed
-        ]
+
     college = models.ForeignKey(College, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
     year = models.SmallIntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4')], default=1)
