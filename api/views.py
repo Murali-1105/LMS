@@ -9,7 +9,10 @@ from .serializers import ProgramSerializer,CourseSerializer
 @api_view(['GET'])
 @login_required
 def get_course(request):
-    queryset=Course.objects.filter(student__id__contains=request.user.id)
+    if request.user.user_type=='student':
+        user_id=request.user.student.id
+
+    queryset = Course.objects.filter(student__id=user_id)
     serializer=CourseSerializer(queryset,many=True)
     return Response(serializer.data)
 

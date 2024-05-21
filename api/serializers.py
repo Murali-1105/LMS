@@ -11,7 +11,7 @@ class CourseSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=Course
-        fields=['name','teacher']
+        fields=['name','teacher','student']
         
         
     
