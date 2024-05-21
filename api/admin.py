@@ -1,86 +1,265 @@
-# Entire admin configuration is here
+#Entire admin configuration is here
 
 from django.contrib import admin
-from .models import College,Program,Course,CourseItem
+from .models import College, Program, Course, CourseItem
 from users.models import User
 
-class ProgramAdmin(admin.ModelAdmin):
-    
+class BaseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):   
-          
-        if db_field.name == "college":
-            if request.user.user_type == 'admin': 
+        if request.user.user_type == 'admin': 
+            if hasattr(self.model, 'college'):
                 # Filter the queryset based on the user's college(college)
                 kwargs["queryset"] = College.objects.filter(name=request.user.college.name)
-                
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
-        
-        if db_field.name == "user":
-            if request.user.user_type == 'admin':
-                # Filter the queryset based on the users college(users)
+        if request.user.user_type == 'admin':
+            # Filter the queryset based on the users college(users)
+            if hasattr(self.model, 'college'):
                 kwargs["queryset"] = User.objects.filter(college=request.user.college) 
-                
         return super().formfield_for_manytomany(db_field, request, **kwargs)
-        
     
     def get_queryset(self, request):
-        
-        queryset=super().get_queryset(request)
-        if request.user.user_type=='admin':
-            queryset=queryset.filter(college=request.user.college)
-            print(queryset)
+        queryset = super().get_queryset(request)
+        if request.user.user_type == 'admin':
+            if hasattr(self.model, 'college'):
+                queryset = queryset.filter(college=request.user.college)
         return queryset
 
-    
-class CourseAdmin(admin.ModelAdmin):
-    
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        
-        if db_field.name == "program":
-            if request.user.user_type == 'admin':
-                # Filter the queryset based on the user's college
-                kwargs["queryset"] = Program.objects.filter(college=request.user.college)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        
-        if db_field.name == "user":
-            if request.user.user_type == 'admin':
-                # Filter the queryset based on the users college(users)
-                kwargs["queryset"] = User.objects.filter(college=request.user.college) 
-                
-        return super().formfield_for_manytomany(db_field, request, **kwargs)
+class ProgramAdmin(BaseAdmin):
+    pass
 
-    
-    def get_queryset(self, request):
-        
-        queryset=super().get_queryset(request)
-        if request.user.user_type=='admin':
-            queryset=queryset.filter(college=request.user.college)
-            print(queryset)
-        return queryset
-    
-    
-class CourseItemAdmin(admin.ModelAdmin):
-    
+class CourseAdmin(BaseAdmin):
+    pass
+
+class CourseItemAdmin(BaseAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "course":
-            if request.user.user_type == 'admin':
-                # Filter the queryset based on the user's college
+        if request.user.user_type == 'admin':
+            # Filter the queryset based on the user's college
+            if hasattr(self.model, 'course'):
                 kwargs["queryset"] = Course.objects.filter(program__college=request.user.college)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+#admin.site.register(College)
+admin.site.register(Program, ProgramAdmin)
+admin.site.register(Course, CourseAdmin)
+admin.site.register(CourseItem, CourseItemAdmin)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from django.contrib import admin
+# from .models import College,Program,Course,CourseItem
+# from users.models import User
+
+# class ProgramAdmin(admin.ModelAdmin):
+    
+#     def formfield_for_foreignkey(self, db_field, request, **kwargs):   
+          
+#         if db_field.name == "college":
+#             if request.user.user_type == 'admin': 
+#                 # Filter the queryset based on the user's college(college)
+#                 kwargs["queryset"] = College.objects.filter(name=request.user.college.name)
+                
+#         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+#     def formfield_for_manytomany(self, db_field, request, **kwargs):
+        
+#         if db_field.name == "user":
+#             if request.user.user_type == 'admin':
+#                 # Filter the queryset based on the users college(users)
+#                 kwargs["queryset"] = User.objects.filter(college=request.user.college) 
+                
+#         return super().formfield_for_manytomany(db_field, request, **kwargs)
+        
+    
+#     def get_queryset(self, request):
+        
+#         queryset=super().get_queryset(request)
+#         if request.user.user_type=='admin':
+#             queryset=queryset.filter(college=request.user.college)
+#             print(queryset)
+#         return queryset
+
+    
+# class CourseAdmin(admin.ModelAdmin):
+    
+#     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        
+#         if db_field.name == "program":
+#             if request.user.user_type == 'admin':
+#                 # Filter the queryset based on the user's college
+#                 kwargs["queryset"] = Program.objects.filter(college=request.user.college)
+#         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+#     def formfield_for_manytomany(self, db_field, request, **kwargs):
+        
+#         if db_field.name == "user":
+#             if request.user.user_type == 'admin':
+#                 # Filter the queryset based on the users college(users)
+#                 kwargs["queryset"] = User.objects.filter(college=request.user.college) 
+                
+#         return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+    
+#     def get_queryset(self, request):
+        
+#         queryset=super().get_queryset(request)
+#         if request.user.user_type=='admin':
+#             queryset=queryset.filter(college=request.user.college)
+#             print(queryset)
+#         return queryset
     
     
-    def get_queryset(self, request):
-        queryset=super().get_queryset(request)
-        if request.user.user_type=='admin':
-            queryset=queryset.filter(college__name=request.user.user_type)
-        return queryset
+# class CourseItemAdmin(admin.ModelAdmin):
+    
+#     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+#         if db_field.name == "course":
+#             if request.user.user_type == 'admin':
+#                 # Filter the queryset based on the user's college
+#                 kwargs["queryset"] = Course.objects.filter(program__college=request.user.college)
+#         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    
+#     def get_queryset(self, request):
+#         queryset=super().get_queryset(request)
+#         if request.user.user_type=='admin':
+#             queryset=queryset.filter(college__name=request.user.user_type)
+#         return queryset
     
 
-admin.site.register(College)
-admin.site.register(Program,ProgramAdmin)
-admin.site.register(Course,CourseAdmin)
-admin.site.register(CourseItem,CourseItemAdmin)
+# admin.site.register(College)
+# admin.site.register(Program,ProgramAdmin)
+# admin.site.register(Course,CourseAdmin)
+# admin.site.register(CourseItem,CourseItemAdmin)

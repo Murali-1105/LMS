@@ -9,7 +9,7 @@ class College(models.Model):
          ("Malla Reddy","Malla Reddy"),
      ]
     
-    name = models.CharField(max_length=100, choices=Name)
+    name = models.CharField(max_length=100, choices=Name,editable=False)
     
     def __str__(self):
         return self.name
