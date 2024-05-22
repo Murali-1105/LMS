@@ -1,5 +1,4 @@
-# api/models.py
-"""Models for College, Program, Course, and CourseItem."""
+"""Models for College, Program, Subject, and Chapter."""
 
 from django.db import models
 from users.models import Teacher, Student
@@ -15,7 +14,7 @@ class College(models.Model):
         ("Malla Reddy", "Malla Reddy"),
     ]
 
-    name = models.CharField(max_length=100, choices=NAME_CHOICES, editable=False)
+    name = models.CharField(max_length=100, choices=NAME_CHOICES)
 
     def __str__(self):
         """String representation of the college."""
@@ -30,60 +29,58 @@ class Program(models.Model):
     year = models.SmallIntegerField(
         choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4')], default=1
     )
-    student = models.ManyToManyField('users.User', related_name='programs')
+    student = models.ManyToManyField(Student, related_name='programs')
 
     def __str__(self):
         """String representation of the program."""
         return f"{self.name}-{self.college}"
 
 
-class Course(models.Model):
-    """Model representing a course."""
+class Subject(models.Model):
+    """Model representing a Subject."""
 
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    student = models.ManyToManyField(Student, related_name='courses')
+    student = models.ManyToManyField(Student, related_name='Subjects',editable=False)
 
     def save(self, *args, **kwargs):
         """Override the save method to set the college based on the program."""
+        self.student=self.program.student
         self.college = self.program.college
         super().save(*args, **kwargs)
 
     def __str__(self):
-        """String representation of the course."""
+        """String representation of the Subject."""
         return self.name
 
 
-class CourseItem(models.Model):
-    """Model representing a course item."""
-
+class Chapter(models.Model):
+    """Model representing a Chapter."""
+    
+    name=models.CharField(max_length=200)
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
-    course = models.ForeignKey(Course, on_delete=models.PROTECT)
+    Subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
     description = models.TextField()
-    pdf = models.FileField(upload_to='path-to-file')
-    videos = models.FileField(upload_to='path-to-file')
+    
 
     def save(self, *args, **kwargs):
-        """Override the save method to set the college based on the course."""
-        self.college = self.course.college
+        """Override the save method to set the college based on the Subject."""
+        self.college = self.Subject.college
         super().save(*args, **kwargs)
 
     def __str__(self):
-        """String representation of the course item."""
-        return f"{self.course} - item"
+        """String representation of the Chapter."""
+        return self.name
 
-
-
-
-
-
-
-
-
-
-
+class ChapterItem(models.Model):
+    
+    description=models.TextField()
+    chapter=models.ForeignKey(Chapter,on_delete=models.PROTECT)
+    ppt=models.FileField(upload_to='path-to-upload')
+    video=models.FileField(upload_to='path-to-upload')
+    
 
 
 
