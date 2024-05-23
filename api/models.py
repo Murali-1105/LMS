@@ -38,7 +38,7 @@ class Program(models.Model):
 
 class Subject(models.Model):
     """Model representing a Subject."""
-
+    image=models.ImageField(upload_to='path-to-upload')
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
