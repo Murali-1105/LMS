@@ -43,11 +43,10 @@ class Subject(models.Model):
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    student = models.ManyToManyField(Student, related_name='Subjects',editable=False)
+    
 
     def save(self, *args, **kwargs):
         """Override the save method to set the college based on the program."""
-        self.student=self.program.student
         self.college = self.program.college
         super().save(*args, **kwargs)
 
