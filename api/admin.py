@@ -40,6 +40,14 @@ class SubjectAdmin(admin.ModelAdmin):
                 # Filter the queryset based on the user's college and user_type='teacher'
                 kwargs["queryset"] = Teacher.objects.filter(user__college=request.user.college)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.user_type == 'teacher':
+            if hasattr(self.model, 'teacher'):
+                teacher=Teacher.objects.get(user=request.user)
+                queryset = queryset.filter(teacher=teacher)
+        return queryset
 
 class ChapterAdmin(BaseAdmin):
     pass

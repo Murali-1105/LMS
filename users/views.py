@@ -2,6 +2,10 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.response import Response
+from django.http import JsonResponse
+from django.middleware import csrf
+
+
 
 def login_view(request):
     if request.method=='POST':
@@ -18,7 +22,11 @@ def login_view(request):
         form=AuthenticationForm()
         
     return render(request, 'login.html', {'form': form})
-            
+
+def get_csrftoken(request):
+    csrf_token=csrf.get_token(request)
+    return JsonResponse({'csrftoken':csrf_token})
+    
             
                 
         
