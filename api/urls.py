@@ -1,6 +1,9 @@
 from django.urls import path
-from .views import get_student_dashboard
+from api import views as api_views
 
 urlpatterns = [
-    path('get_student_dashboard',get_student_dashboard,name='get_student_dashboard'),
+    path("user/token/",api_views.MyTokenObtainPairView.as_view()),
+    
+    
 ]
+

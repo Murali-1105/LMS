@@ -80,6 +80,9 @@ class ChapterItem(models.Model):
     ppt=models.FileField(upload_to='path-to-upload')
     video=models.FileField(upload_to='path-to-upload')
     
+    def __str__(self):
+        return f"{self.chapter}-item{self.id}"
+    
 
 
 

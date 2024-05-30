@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from .models import *
-from users.models import User,Teacher
+from users.models import User,Teacher,Student
 
 class BaseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):   
@@ -26,8 +26,27 @@ class BaseAdmin(admin.ModelAdmin):
                 queryset = queryset.filter(college=request.user.college)
         return queryset
 
-class ProgramAdmin(BaseAdmin):
-    pass
+class ProgramAdmin(admin.ModelAdmin):
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if request.user.user_type == 'admin':
+            # Filter the queryset based on the users college(users)
+            if hasattr(self.model, 'student'):
+                kwargs["queryset"] = Student.objects.filter(user__college=request.user.college) 
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):   
+        if request.user.user_type == 'admin': 
+            if hasattr(self.model, 'college'):
+                # Filter the queryset based on the user's college(college)
+                kwargs["queryset"] = College.objects.filter(name=request.user.college.name)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.user_type == 'admin':
+            if hasattr(self.model, 'college'):
+                queryset = queryset.filter(college=request.user.college)
+        return queryset
 
 class SubjectAdmin(admin.ModelAdmin):
     
@@ -49,15 +68,28 @@ class SubjectAdmin(admin.ModelAdmin):
                 queryset = queryset.filter(teacher=teacher)
         return queryset
 
-class ChapterAdmin(BaseAdmin):
-    pass
+class ChapterAdmin(admin.ModelAdmin):
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if request.user.user_type == 'admin':
+            # Filter the queryset based on the user's college
+            if hasattr(self.model, 'chapter'):
+                kwargs["queryset"] = Chapter.objects.filter(college=request.user.college)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.user_type == 'admin':
+            if hasattr(self.model, 'college'):
+                queryset = queryset.filter(college=request.user.college)
+        return queryset
+
 
 class ChapterItemAdmin(BaseAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if request.user.user_type == 'admin':
             # Filter the queryset based on the user's college
-            if hasattr(self.model, 'chapter'):
-                kwargs["queryset"] = Chapter.objects.filter(program__college=request.user.college)
+            if hasattr(self.model, 'subject'):
+                kwargs["queryset"] = Subject.objects.filter(college=request.user.college)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(College)
