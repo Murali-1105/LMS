@@ -2,6 +2,7 @@
 
 from django.db import models
 from users.models import Teacher, Student
+from random import randint
 
 
 class College(models.Model):
@@ -45,6 +46,7 @@ class Program(models.Model):
 
 class Subject(models.Model):
     """Model representing a Subject."""
+    
     image=models.ImageField(upload_to='path-to-upload')
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
@@ -67,7 +69,7 @@ class Chapter(models.Model):
     
     name=models.CharField(max_length=200)
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
-    Subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
     description = models.TextField()
     
 
