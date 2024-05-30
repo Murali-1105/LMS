@@ -23,17 +23,24 @@ class College(models.Model):
 
 class Program(models.Model):
     """Model representing a program."""
+    SEMESTER=[
+        (x,x) for x in range(1,9)
+    ]
+    YEAR=[
+        (x,x) for x in range(1,5)
+    ]
 
     college = models.ForeignKey(College, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
+    semester=models.IntegerField(choices=SEMESTER,default=1)
     year = models.SmallIntegerField(
-        choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4')], default=1
+        choices=YEAR, default=1
     )
-    student = models.ManyToManyField(Student, related_name='programs')
+    # student = models.ManyToManyField(Student, related_name='programs')
 
     def __str__(self):
         """String representation of the program."""
-        return f"{self.name}-{self.college}"
+        return f"{self.name}-{self.college}-sem{self.semester}"
 
 
 class Subject(models.Model):

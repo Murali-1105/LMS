@@ -39,7 +39,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
     student_id=models.CharField(max_length=100)
-    
+    program=models.ForeignKey('api.Program',on_delete=models.PROTECT,null=True)
     def save(self, *args, **kwargs):
         """
         Override save method to set the student's name based on the user's username.
