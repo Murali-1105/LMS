@@ -46,11 +46,11 @@ class Program(models.Model):
 
 class Subject(models.Model):
     """Model representing a Subject."""
-    
-    image=models.ImageField(upload_to='path-to-upload')
+    img=models.ImageField(upload_to='path-to-upload')
+    title = models.CharField(max_length=300)
+    description=models.TextField()
     college = models.ForeignKey(College, on_delete=models.PROTECT, editable=False)
     program = models.ForeignKey(Program, on_delete=models.PROTECT)
-    name = models.CharField(max_length=300)
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     
 
@@ -61,7 +61,7 @@ class Subject(models.Model):
 
     def __str__(self):
         """String representation of the Subject."""
-        return self.name
+        return self.title
 
 
 class Chapter(models.Model):
@@ -93,8 +93,8 @@ class ChapterItem(models.Model):
         return f"{self.chapter}-item{self.id}"
     
 
-class ChapterProgress(models.Model):
-    course=models.ForeignKey(Chapter,on_delete=models.PROTECT)
+class SubjectProgress(models.Model):
+    subject=models.ForeignKey(Subject,on_delete=models.PROTECT)
     student=models.ForeignKey(Student,on_delete=models.PROTECT,related_name='progress')
     progress=models.PositiveSmallIntegerField()
     completed=models.BooleanField(default=False)
@@ -102,7 +102,9 @@ class ChapterProgress(models.Model):
     def save(self,*args,**kwargs):
         if self.progress==100:
             self.completed=True
-        super.save(*args,**kwargs)
+        super().save(*args,**kwargs)
+        
+    
         
     
 class ChapterQuiz(models.Model):

@@ -6,11 +6,13 @@ from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 import jwt
 from django.conf import settings
-from .models import  Program,Subject,Chapter,ChapterItem
+from .models import  *
+from users.models import *
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class=api_serializers.MyTokenObtainSerializer
+    
     
     
 def authenticate(request):  #Authenticating the token only if they are students
@@ -43,12 +45,15 @@ def get_subject(request):
         
         college_name=decoded_token['college']
         program_name=decoded_token['program']
+        user_id=decoded_token['user_id']
+        user=User.objects.get(user_id=user_id)
         
+        context={'user':user}
         program=Program.objects.get(college__name=college_name,name=program_name)
         
         subjects=Subject.objects.filter(program=program)
         
-        subjectserializer = api_serializers.SubjectSerializer(subjects,many=True)
+        subjectserializer = api_serializers.SubjectSerializer(subjects,many=True,context=context)
         
         return Response({'subjects':subjectserializer.data},status=status.HTTP_200_OK)
     

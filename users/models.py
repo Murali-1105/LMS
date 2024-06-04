@@ -17,12 +17,21 @@ class User(AbstractUser):
         ("teacher", "Teacher"),
         ("admin", "Admin"),
     ]
+    name=models.CharField(max_length=200,unique=True)
+    user_id=models.CharField(max_length=100,editable=False,primary_key=True)
     user_type = models.CharField(max_length=100, choices=USER_TYPES)
     college = models.ForeignKey('api.College', on_delete=models.PROTECT, null=True)
+        
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._original_password = self.password
+        
+    @property
+    def id(self):
+        return self.pk
+        
+        
     
     def save(self, *args, **kwargs):
         """
@@ -30,7 +39,16 @@ class User(AbstractUser):
         """
         if self.password and (not self.pk or self._state.adding or self.password != self._original_password):
             self.set_password(self.password)
+        if not self.user_id and self._state.adding:
+            self.user_id=f"{self.college}-{self.user_type}-{randint(10000,99999)}"
+            
+        
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        if self.is_superuser:
+            return self.name
+        return self.user_id
 
 class Student(models.Model):
     """
@@ -38,7 +56,7 @@ class Student(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
-    student_id=models.CharField(max_length=100)
+    student_id=models.CharField(max_length=100,editable=False,primary_key=True)
     program=models.ForeignKey('api.Program',on_delete=models.PROTECT,null=True,blank=True)
     def save(self, *args, **kwargs):
         """
@@ -46,10 +64,11 @@ class Student(models.Model):
         """
         self.student_id=f"{self.user.college}{randint(10000,99999)}"
         self.name = self.user.username
+        self.student_id=self.user.user_id
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.name
+        return self.student_id
 
 class Teacher(models.Model):
     """
@@ -57,16 +76,18 @@ class Teacher(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     name = models.CharField(max_length=300)
+    teacher_id=models.CharField(max_length=100,editable=False,primary_key=True)
     
     def save(self, *args, **kwargs):
         """
         Override save method to set the teacher's name based on the user's username.
         """
         self.name = self.user.username
+        self.teacher_id=self.user.user_id
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.name
+        return self.teacher_id
 
 @receiver(post_save, sender=User)
 def custom_user_created(sender, instance, created, **kwargs):
