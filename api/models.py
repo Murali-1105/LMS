@@ -75,7 +75,7 @@ class Chapter(models.Model):
 
     def save(self, *args, **kwargs):
         """Override the save method to set the college based on the Subject."""
-        self.college = self.Subject.college
+        self.college = self.subject.college
         super().save(*args, **kwargs)
 
     def __str__(self):

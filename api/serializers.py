@@ -1,9 +1,11 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import Token
+
 from .models import *
 from users.models import *
 from rest_framework import serializers
+from django.conf import settings
 
 class MyTokenObtainSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -25,8 +27,10 @@ class SubjectSerializer(ModelSerializer):
         student=Student.objects.get(user=user)
         # subject_id=self.data.get('id')
         subject_id=instance.id
-        
-        subject_progress=SubjectProgress.objects.get(student=student,subject__id=subject_id)
+        try:
+            subject_progress=SubjectProgress.objects.get(student=student,subject__id=subject_id)
+        except SubjectProgress.DoesNotExist:
+            return 0
         return subject_progress.progress
     
     progress=serializers.SerializerMethodField(method_name="calc_student_subject_progress")
@@ -34,6 +38,14 @@ class SubjectSerializer(ModelSerializer):
     class Meta:
         model = Subject
         fields=['id','img','title','description','progress']
+
+    def to_representation(self, instance):
+        
+        ret = super().to_representation(instance)
+
+        ret['img']=settings.BASE_URL+ret['img']
+
+        return ret
         
         
 class ChapterSerializer(ModelSerializer):
