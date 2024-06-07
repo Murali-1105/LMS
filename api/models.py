@@ -103,9 +103,7 @@ class SubjectProgress(models.Model):
         if self.progress==100:
             self.completed=True
         super().save(*args,**kwargs)
-        
-    
-        
+
     
 class ChapterQuiz(models.Model):
     

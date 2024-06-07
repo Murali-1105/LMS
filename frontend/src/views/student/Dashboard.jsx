@@ -71,11 +71,11 @@ function Dashboard() {
     <>
       <Header />
       <section className="pt-4"> 
-        <Sidebar />
         <div className="container">
           {/* Header Here */}
           <div className="row mt-0 mt-md-4">
-            {/* Sidebar Here */}
+            {/* Sidebar Here */} 
+              <Sidebar />
             <div className="col-lg-9 col-md-8 col-12">
               <div className="row mb-4">
                 <h4 className="mb-0 mb-4">
@@ -91,7 +91,7 @@ function Dashboard() {
                     </span>
                     <div className="ms-4">
                       <div className="d-flex">
-                        <h5 className="purecounter mb-0 fw-bold">2</h5>
+                        <h5 className="purecounter mb-0 fw-bold">4</h5>
                       </div>
                       <p className="mb-0 h6 fw-light">Total Courses</p>
                     </div>
@@ -143,7 +143,7 @@ function Dashboard() {
                           className="img-fluid card-img-top rounded-top-4"
                           alt={subject.title}
                         />
-                        <div className="card-body">
+                        <div className="card-body bg-primary bg-gradient bg-opacity-10 rounded-bottom-4">
                           <h5 className="card-title fs-6">{subject.title}</h5>
                           <div className="mt-5">
                             <div className="progress h-50">

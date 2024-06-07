@@ -104,12 +104,12 @@
     border: none; 
   }    
    
-  .card-container .card-body{  
-    background-color: rgb(220, 243, 245);
-  }
+  /* .card-container .card-body{  
+    background-color: rgb(245, 225, 225);
+  } */
     
   button.slick-arrow{ 
-    background: #000;   
+    background: #282829;   
     border-radius: 50%; 
  }  
    
@@ -121,12 +121,12 @@
     background: #000; 
   } 
 
-.progress{
+  .card-container .progress{
     height: 0.5rem;
     border-radius: 0.5rem;
   }
   
-  .progress-bar { 
+  .card-container .progress-bar { 
     height: 0.5rem;
     border-radius: 0.5rem;
   }
