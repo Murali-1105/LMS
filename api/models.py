@@ -85,7 +85,7 @@ class Chapter(models.Model):
 class ChapterItem(models.Model):
     
     description=models.TextField()
-    chapter=models.ForeignKey(Chapter,on_delete=models.PROTECT)
+    chapter=models.ForeignKey(Chapter,on_delete=models.PROTECT,related_name='items')
     ppt=models.FileField(upload_to='path-to-upload')
     video=models.FileField(upload_to='path-to-upload')
     
@@ -102,7 +102,10 @@ class SubjectProgress(models.Model):
     def save(self,*args,**kwargs):
         if self.progress==100:
             self.completed=True
-        super().save(*args,**kwargs)
+        super().save(*args,**kwargs)   
+
+    def __str__(self):
+        return f"{self.student.name}-subject-{self.subject.title}"
 
     
 class ChapterQuiz(models.Model):

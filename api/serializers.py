@@ -12,8 +12,10 @@ class MyTokenObtainSerializer(TokenObtainPairSerializer):
     def get_token(cls,user):
         token=super().get_token(user)
         
-        token['user_id'] = user.user_id
-        token['user_type']=user.user_type
+        token['user_id'] = user.user_id 
+        token['username'] = user.username
+        token['user_type']=user.user_type 
+        token['user_image'] = settings.BASE_URL+user.user_image.url
         token['college']=user.college.name
         token['program']=Student.objects.get(user=user).program.name 
             
@@ -48,17 +50,35 @@ class SubjectSerializer(ModelSerializer):
         return ret
         
         
-class ChapterSerializer(ModelSerializer):
-    class Meta:
-        model=Chapter
-        fields='__all__'
-
 class ChapterItemSerializer(ModelSerializer):
+    
     class Meta:
         model=ChapterItem
-        fields='__all__'
+        fields=['description','video']
         
-                
+    def to_representation(self, instance):
+        
+        ret = super().to_representation(instance)
+
+        ret['video']=settings.BASE_URL+ret['video']
+
+        return ret
+        
+        
+class ChapterSerializer(ModelSerializer):
+    
+    items = serializers.SerializerMethodField(method_name='get_items')
+    
+    class Meta:
+        model=Chapter
+        fields=['name','description','items']
+
+    def get_items(self,obj):
+        items=obj.items.all()
+        serializer=ChapterItemSerializer(items,many=True)
+        return serializer.data
+        
+                 
         
         
     

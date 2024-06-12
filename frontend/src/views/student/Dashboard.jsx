@@ -1,25 +1,71 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./Partials/Sidebar";
-import Header from "./Partials/Header";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; 
 import useAxios from "../../utils/useAxios";
 
-import "./Css/Dashboard.css";
+// import "./Css/Dashboard.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick-theme.css";  
 
-function Dashboard() {
-  const [subjects, setSubjects] = useState([]);
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+ 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+); 
+
+ 
+ 
+// const chartConfigs = subjects.map((subject, index) => {
+//   let labels = [subject.title];
+
+//   let data = {
+//     labels,
+//     datasets: [
+//       {
+//         label: 'Current Month',
+//         data: [subject.progress],
+//         backgroundColor: 'rgb(255, 99, 132)',
+//       },
+//     ],
+//   };
+
+//   return data;
+// });
+ 
+ 
+function Dashboard() {       
+  const [subjects, setSubjects] = useState([]); 
+  const [subjectArray, setSubjectArray] = useState([]); 
+  const [subjectProgressArray, setSubjectProgressArray] = useState([]); 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true); 
+   
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
         const response = await useAxios().get("/user/subject");
         if (response.data && Array.isArray(response.data.subjects)) {
           setSubjects(response.data.subjects);
+          
+          const subjectArraylocal = response.data.subjects.map(subject => subject.title);
+          const subjectProgresslocal = response.data.subjects.map(subject => subject.progress);
+
+          setSubjectArray(subjectArraylocal);
+          setSubjectProgressArray(subjectProgresslocal);
         } else {
           setSubjects([]);
           setError(new Error("Invalid data format"));
@@ -28,155 +74,184 @@ function Dashboard() {
         console.error("Error fetching subjects:", error);
         setError(error);
       } finally {
-        setLoading(false);
-      }
-    };
+        setLoading(false); 
+      }  
+    }
 
     fetchSubjects();
   }, []); 
 
-
+    
   const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
+     dots: false,
+     infinite: false,
+     speed: 500,
+     slidesToShow: 4,
+     slidesToScroll: 1,
+     arrows: true,
+     responsive: [
+       {
+         breakpoint: 1024,
+         settings: {
+           slidesToShow: 3,
+           slidesToScroll: 1,
+         },
+       },
+       {
+         breakpoint: 768,
+         settings: {
+           slidesToShow: 2,
+           slidesToScroll: 1,
+         },
+       },
+       {
+         breakpoint: 480,
+         settings: {
+           slidesToShow: 1,
+           slidesToScroll: 1,
+         },
+       },
+     ], 
+   }; 
+    
+   const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
+      title: {
+        display: true,
+        text: 'Subject Total Progress',
       },
+    },
+  }; 
+   
+  const labels = subjectArray;
+  
+  const data = {
+    labels,
+    datasets: [
       {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
+        label: 'Current Month',
+        data: subjectProgressArray,
+        backgroundColor: 'rgb(255, 99, 132)',
       },
-    ], 
-  };
-  return (
-    <>
-      <Header />
-      <section className="pt-4"> 
-        <div className="container">
-          {/* Header Here */}
-          <div className="row mt-0 mt-md-4">
-            {/* Sidebar Here */} 
-              <Sidebar />
-            <div className="col-lg-9 col-md-8 col-12">
-              <div className="row mb-4">
-                <h4 className="mb-0 mb-4">
-                  {" "}
-                  <i className="bi bi-grid-fill"></i> Dashboard
-                </h4>
-                {/* Counter item */}
-
-                <div className="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                  <div className="d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-10 rounded-3">
-                    <span className="display-6 lh-1 text-orange mb-0">
-                      <i className="fas fa-tv fa-fw" />
-                    </span>
-                    <div className="ms-4">
-                      <div className="d-flex">
-                        <h5 className="purecounter mb-0 fw-bold">4</h5>
-                      </div>
-                      <p className="mb-0 h6 fw-light">Total Courses</p>
-                    </div>
-                  </div>
-                </div>
-                {/* Counter item */}
-                <div className="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                  <div className="d-flex justify-content-center align-items-center p-4 bg-danger bg-opacity-10 rounded-3">
-                    <span className="display-6 lh-1 text-purple mb-0">
-                      <i className="fas fa-clipboard-check fa-fw" />
-                    </span>
-                    <div className="ms-4">
-                      <div className="d-flex">
-                        <h5 className="purecounter mb-0 fw-bold"> 0</h5>
-                      </div>
-                      <p className="mb-0 h6 fw-light">Complete lessons</p>
-                    </div>
-                  </div>
-                </div>
-                {/* Counter item */}
-                <div className="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                  <div className="d-flex justify-content-center align-items-center p-4 bg-success bg-opacity-10 rounded-3">
-                    <span className="display-6 lh-1 text-success mb-0">
-                      <i className="fas fa-medal fa-fw" />
-                    </span>
-                    <div className="ms-4">
-                      <div className="d-flex">
-                        <h5 className="purecounter mb-0 fw-bold"> 0</h5>
-                      </div>
-                      <p className="mb-0 h6 fw-light">Achieved Certificates</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="card-wrapper">
-                {loading && <p>Loading...</p>}
-                {error && <p>Error: {error.message}</p>}
-                <h4 className="mb-0 mb-4">
-                  {" "}
-                  <i className="bi bi-grid-fill"></i> Subjects
-                </h4>
-                <div className="card-container">
-                  <Slider {...settings}>
-                    {subjects.map((subject, index) => (
-                      <div className="card rounded-4" key={index}>
-                        <img
-                          src={subject.img}
-                          className="img-fluid card-img-top rounded-top-4"
-                          alt={subject.title}
-                        />
-                        <div className="card-body bg-primary bg-gradient bg-opacity-10 rounded-bottom-4">
-                          <h5 className="card-title fs-6">{subject.title}</h5>
-                          <div className="mt-5">
-                            <div className="progress h-50">
-                              <div
-                                className="progress-bar"
-                                role="progressbar"
-                                style={{ width: `${subject.progress}%` }}
-                                aria-valuenow={subject.progress}
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                              ></div>
-                            </div>
-                            {subject.progress}%
-                          </div>
-                          <Link
-                            className="btn btn-primary mt-3 w-100"
-                            to={`/student/course-detail/${subject.id}`}
-                          >
-                            {" "}
-                            {subject.buttontext} continue
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </Slider>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  );
+    
+    ],
+  }; 
+    
+ return ( 
+     <> 
+             <div class="container-fluid">
+                 <div class="my-4">
+                  <h4><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
+                 </div>
+                 <div class="row px-3">
+                     <div class="col-12 col-md-6 col-lg-4 d-flex">
+                         <div class="card flex-fill border-0 illustration">
+                             <div class="card-body p-0 d-flex flex-fill">
+                                 <div class="row g-0 w-100">
+                                     <div class="col-6">
+                                         <div class="p-3 m-1">
+                                             <h4>Welcome Back, student1</h4>
+                                             <p class="mb-0">B.S.c Aviation</p>
+                                         </div>
+                                     </div>
+                                     <div class="col-6 align-self-end text-end">
+                                         <img src="/public/student.jpg" class="img-fluid illustration-img" alt="" />
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-12 col-md-6 col-lg-4 d-flex">
+                         <div class="card flex-fill border-0">
+                             <div class="card-body py-4">
+                                 <div class="d-flex align-items-start">
+                                     <div class="flex-grow-1">
+                                         <h4 class="mb-2">
+                                             0
+                                         </h4>
+                                         <p class="mb-2">
+                                             Total Course
+                                         </p>
+                                         <div class="mb-0">
+                                             <span class="text-muted">
+                                                 Since Last Month
+                                             </span>
+                                         </div> 
+                                     </div>
+                                 </div>
+                             </div>
+                         </div> 
+                     </div>  
+                     <div class="col-12 col-md-6 col-lg-4  d-flex">
+                         <div class="card flex-fill border-0">
+                             <div class="card-body py-4">
+                                 <div class="d-flex align-items-start">
+                                     <div class="flex-grow-1">
+                                         <h4 class="mb-2">
+                                             0
+                                         </h4>
+                                         <p class="mb-2">
+                                             Total Course
+                                         </p>
+                                         <div class="mb-0">
+                                             <span class="text-muted">
+                                                 Since Last Month
+                                             </span>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div> 
+                     </div> 
+                 </div>   
+                 <Bar options={options} data={data} />
+               <div class="my-4">
+                     <h4><i class="bi bi-file-earmark-fill pe-2"></i>My Subjects</h4>
+               </div>
+             <div className="card-container px-2">  
+              <div>
+                {loading && <p><i className="fas fa-spinner fa-spin"></i></p>}
+                {error && <p>Error: {error.message}</p>} 
+               </div>
+               <Slider {...settings}>
+                 {subjects.map((subject, index) => (  
+                   <div className="card px-2" key={index}> 
+                     <img src={subject.img} className="img-fluid card-img-top rounded-top-3" alt={subject.title} style={{ width: "100%", height: "200px", objectFit: "cover",}}/> 
+                     <div className="card-body rounded-bottom-3">
+                       <h5 className="card-title fs-6">{subject.title}</h5>
+                       <div className="mt-5">
+                         <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
+                           <div
+                             className="progress-bar"
+                             role="progressbar"
+                             style={{ width: `${subject.progress}%` }}
+                             aria-valuenow={subject.progress}
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                           ></div>
+                         </div>
+                         {subject.progress}%
+                       </div>
+                       <Link
+                         className="btn btn-primary mt-3 w-100"
+                         to={`/student/course-detail/${subject.id}/${subject.progress}`}
+                       >
+                         {" "}
+                         {subject.buttontext} 
+                         continue
+                       </Link>
+                     </div>
+                   </div> 
+                ))}
+               </Slider>
+             </div>
+          </div>  
+     </>
+ );
 }
 
 export default Dashboard;

@@ -1,37 +1,27 @@
 import React from 'react'
-import BaseHeader from '../partials/BaseHeader'
-import BaseFooter from '../partials/BaseFooter'
+import BaseHeader from '../base/partials/BaseHeader'
+import BaseFooter from '../base/partials/BaseFooter'
 import Sidebar from './Partials/Sidebar'
 import Header from './Partials/Header'
 
 function Profile() {
   return (
     <>
-      {/* <BaseHeader /> */}
-    <Header />
-      <section className="pb-5">
-        <div className="container">
-          {/* Header Here */}
-         
+        <div className="container me-3">
           <div className="row mt-0 mt-md-4">
-            {/* Sidebar Here */}
-            <Sidebar />
-            <div className="col-lg-9 col-md-8 col-12">
+            <div className="col-12">
               {/* Card */}
               <div className="card">
                 {/* Card header */}
                 <div className="card-header">
                   <h3 className="mb-0">Profile Details</h3>
-                  <p className="mb-0">
-                    You have full control to manage your own account setting.
-                  </p>
                 </div>
                 {/* Card body */}
                 <form className="card-body">
                   <div className="d-lg-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center mb-4 mb-lg-0">
                       <img
-                        src="https://eduport.webestica.com/assets/images/avatar/09.jpg"
+                        src="/public/student.jpg"
                         id="img-uploaded"
                         className="avatar-xl rounded-circle"
                         alt="avatar"
@@ -103,9 +93,6 @@ function Profile() {
 
           </div>
         </div>
-      </section>
-
-      {/* <BaseFooter /> */}
     </>
   )
 }
