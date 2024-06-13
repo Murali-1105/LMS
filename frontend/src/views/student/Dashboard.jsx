@@ -7,15 +7,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";  
 
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
  
 ChartJS.register(
@@ -24,35 +16,25 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 ); 
 
  
- 
-// const chartConfigs = subjects.map((subject, index) => {
-//   let labels = [subject.title];
-
-//   let data = {
-//     labels,
-//     datasets: [
-//       {
-//         label: 'Current Month',
-//         data: [subject.progress],
-//         backgroundColor: 'rgb(255, 99, 132)',
-//       },
-//     ],
-//   };
-
-//   return data;
-// });
- 
- 
 function Dashboard() {       
   const [subjects, setSubjects] = useState([]); 
-  const [subjectArray, setSubjectArray] = useState([]); 
-  const [subjectProgressArray, setSubjectProgressArray] = useState([]); 
+  const [subjectTitle, setSubjectTitle] = useState([]); 
+  const [subjectProgress, setSubjectProgress] = useState([]); 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);  
+  const [isScrolling, setIsScrolling] = useState(false); 
+   
+  const handleMouseOver = () => {
+    setIsScrolling(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsScrolling(false);
+  };
    
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -61,11 +43,11 @@ function Dashboard() {
         if (response.data && Array.isArray(response.data.subjects)) {
           setSubjects(response.data.subjects);
           
-          const subjectArraylocal = response.data.subjects.map(subject => subject.title);
+          const subjectTitlelocal = response.data.subjects.map(subject => subject.title);
           const subjectProgresslocal = response.data.subjects.map(subject => subject.progress);
 
-          setSubjectArray(subjectArraylocal);
-          setSubjectProgressArray(subjectProgresslocal);
+          setSubjectTitle(subjectTitlelocal);
+          setSubjectProgress(subjectProgresslocal);
         } else {
           setSubjects([]);
           setError(new Error("Invalid data format"));
@@ -114,45 +96,87 @@ function Dashboard() {
      ], 
    }; 
     
-   const options = {
-    responsive: true,
+  const options = {
+    responsive: true,  
     plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
+      legend: { 
         display: true,
-        text: 'Subject Total Progress',
+        position: 'top',  
+        align: 'center',
+        labels: {
+           font: {
+              weight: 'bold'
+           }, 
+        }
+      },  
+    },  
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          fontColor: '#333', 
+        },
+      },
+      y: {
+        min: 0,
+        max: 100,
+        ticks: {
+          stepSize: 10, 
+          fontColor: '#333',
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
       },
     },
+    elements: {
+      bar: {
+        borderRadius: 3,
+        borderWidth: 0.7,
+      },
+    }, 
   }; 
    
-  const labels = subjectArray;
+  const labels = subjectTitle.map(label => label.length > 10 ? label.substring(0, 20) : label);
   
   const data = {
     labels,
     datasets: [
       {
-        label: 'Current Month',
-        data: subjectProgressArray,
-        backgroundColor: 'rgb(255, 99, 132)',
+        label: 'Total Progress',
+        data: subjectProgress,
+        backgroundColor: 'rgba(0, 123, 255, 0.8)',
       },
-    
+      {
+        label: 'Quiz Mark',
+        data: [11,18,29,30,50],
+        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+      },
+
     ],
   }; 
     
  return ( 
-     <> 
-             <div class="container-fluid">
-                 <div class="my-4">
-                  <h4><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
-                 </div>
-                 <div class="row px-3">
-                     <div class="col-12 col-md-6 col-lg-4 d-flex">
-                         <div class="card flex-fill border-0 illustration">
+     <>  
+       <div class="container-fluid px-2 px-sm-4 px-xxl-5"> 
+          <h4 className="my-4"><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
+          <div class="row">  
+               <div className="col-12 col-xl-8 mb-4"> 
+                   <div class="card border-0 shadow-sm w-100 h-100"> 
+                      <div className="card-body d-flex align-items-center justify-content-center">
+                        <Bar options={options} data={data}/> 
+                      </div>
+                   </div>
+                </div> 
+                  <div className="col-12 col-xl-4"> 
+                    <div className="row">
+                     <div class="col-12 col-sm-6 col-xl-12 d-flex">
+                         <div class="card flex-fill border-0 shadow-sm illustration">
                              <div class="card-body p-0 d-flex flex-fill">
                                  <div class="row g-0 w-100">
-                                     <div class="col-6">
+                                     <div class="col-6 flex-grow-1">
                                          <div class="p-3 m-1">
                                              <h4>Welcome Back, student1</h4>
                                              <p class="mb-0">B.S.c Aviation</p>
@@ -165,8 +189,8 @@ function Dashboard() {
                              </div>
                          </div>
                      </div>
-                     <div class="col-12 col-md-6 col-lg-4 d-flex">
-                         <div class="card flex-fill border-0">
+                     <div class="col-12 col-sm-6 col-xl-12 d-flex">
+                         <div class="card flex-fill border-0 shadow-sm">
                              <div class="card-body py-4">
                                  <div class="d-flex align-items-start">
                                      <div class="flex-grow-1">
@@ -181,13 +205,14 @@ function Dashboard() {
                                                  Since Last Month
                                              </span>
                                          </div> 
-                                     </div>
+                                     </div> 
+
                                  </div>
                              </div>
                          </div> 
                      </div>  
-                     <div class="col-12 col-md-6 col-lg-4  d-flex">
-                         <div class="card flex-fill border-0">
+                     <div class="col-12 col-sm-6 col-xl-12  d-flex">
+                         <div class="card flex-fill border-0 shadow-sm">
                              <div class="card-body py-4">
                                  <div class="d-flex align-items-start">
                                      <div class="flex-grow-1">
@@ -205,24 +230,24 @@ function Dashboard() {
                                      </div>
                                  </div>
                              </div>
-                         </div> 
-                     </div> 
-                 </div>   
-                 <Bar options={options} data={data} />
-               <div class="my-4">
-                     <h4><i class="bi bi-file-earmark-fill pe-2"></i>My Subjects</h4>
-               </div>
-             <div className="card-container px-2">  
+                         </div>  
+                       </div>
+                   </div> 
+                </div>  
+             </div>   
+          </div>   
+          <div className="container-fluid card-container px-2 px-sm-4 px-xxl-5"> 
+               <h4 className="my-4"><i class="bi bi-file-earmark-fill pe-2"></i>My Subjects</h4>
               <div>
                 {loading && <p><i className="fas fa-spinner fa-spin"></i></p>}
                 {error && <p>Error: {error.message}</p>} 
-               </div>
+              </div>
                <Slider {...settings}>
                  {subjects.map((subject, index) => (  
                    <div className="card px-2" key={index}> 
                      <img src={subject.img} className="img-fluid card-img-top rounded-top-3" alt={subject.title} style={{ width: "100%", height: "200px", objectFit: "cover",}}/> 
                      <div className="card-body rounded-bottom-3">
-                       <h5 className="card-title fs-6">{subject.title}</h5>
+                       <h5 className='card-title fs-6'>{subject.title}</h5>
                        <div className="mt-5">
                          <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
                            <div
@@ -248,8 +273,7 @@ function Dashboard() {
                    </div> 
                 ))}
                </Slider>
-             </div>
-          </div>  
+          </div> 
      </>
  );
 }

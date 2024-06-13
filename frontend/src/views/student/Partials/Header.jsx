@@ -83,25 +83,49 @@ function Header({ toggleSidebar }) {
                           <i className="bi bi-moon-fill"></i>
                           <span className="ball"></span>
                       </label>
-               </li>  
-               <li className='notify-btn position-relative border border-light rounded-3 me-4'>  
-                  <a href=''> 
+               </li>    
+               <li className='position-relative border border-light rounded-3 me-4'> 
+                     <a href=""><i class="bi bi-ticket-detailed p-1"></i></a>
+                 </li>
+               <li >  
+                  {/* <a href=''> 
                       <i className="bi bi-bell-fill fs-6 p-1"></i> 
                       <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger p-1"><span className="visually-hidden">messages</span></span>
-                   </a>
-                </li>
-                <li className="nav-item dropdown"> 
+                   </a>      */}
+                   <div class="dropdown me-3 d-none d-sm-block">
+                    <div class="cursor-pointer dropdown-toggle navbar-link" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i className="bi bi-bell-fill fs-6 p-1"></i> 
+                    </div>
+                    <div class="dropdown-menu fx-dropdown-menu">
+                        <h5 class="p-3 bg-primary text-light">Notification</h5>
+                        <div class="list-group list-group-flush">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="me-auto">
+                                    <div class="fw-semibold">Subheading</div>
+                                    <span class="fs-7">Content for list item</span>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">14</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                </li> 
+                <li className="nav-item nav-profile">  
+                  <div className='dropdown'>
                     <div data-bs-toggle="dropdown" className=" d-flex justify-content-center align-items-center">  
                        <a href="" className='nav-icon'> 
-                          <img src={decodedToken?.user_image} className="avatar img-fluid rounded-5" alt="" /> 
-                          <span className='ms-2'>Welcome, {decodedToken?.username}!<i className="bi bi-chevron-down ps-1"></i></span>  
+                          <img src={decodedToken?.user_image} className="avatar img-fluid rounded-5" alt="" />  
+                          <span className='d-none d-md-inline ms-2'>Welcome, {decodedToken?.username}!<i className="bi bi-chevron-down ps-1"></i></span>  
                         </a>     
                     </div>
                    <div className="dropdown-menu dropdown-menu-end mt-2 px-2">
                         <Link href="#" className="dropdown-item" to={`/student/profile/`}><i className="bi bi-person-bounding-box pe-2"></i>Profile</Link>
                         <Link href="#" className="dropdown-item" to={`/student/change-password/`} ><i className="bi bi-gear-fill pe-2"></i>Setting</Link>
                         <Link to="#" className="dropdown-item" onClick={logout} ><i className="bi bi-box-arrow-right pe-2"></i>Logout</Link> 
-                    </div>
+                    </div> 
+                  </div>
                 </li>
             </ul>
         </div>

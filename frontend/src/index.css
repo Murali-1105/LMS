@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
+  
 *,
 ::after,
 ::before {
   box-sizing: border-box;
-}
+} 
 
 body {
   font-family: "Poppins", sans-serif;
@@ -127,7 +127,7 @@ h4 {
   font-size: 10px;
 }
 
-.dropdown-menu {
+.nav-profile .dropdown-menu {
   visibility: hidden;
   opacity: 0;
   display: block;
@@ -137,13 +137,13 @@ h4 {
     transform 0.3s ease-in-out;
 }
 
-.dropdown-menu.show {
+.nav-profile .dropdown-menu.show {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
 }
 
-.dropdown-item:hover {
+.nav-profile.dropdown-item:hover {
   background-color: var(--bs-primary-bg-subtle);
   border-radius: 0.2rem;
 }
@@ -291,3 +291,31 @@ h4 {
 .checkbox:checked + .checkbox-label .ball {
   transform: translateX(24px);
 }
+ 
+/*  
+.card-title {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box; 
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
+} 
+ 
+.card-title::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-scroll {
+  animation: scroll-text 10s linear infinite;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} */

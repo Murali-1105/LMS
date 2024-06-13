@@ -12,7 +12,10 @@ function CourseDetail() {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => { setShow(true); }
+  const handleShow = (chapteritem) => {setchapterItem(chapteritem);setShow(true)};   
+   
+
+  const [chapterItem, setchapterItem] = useState([]); 
 
   const [noteShow, setNoteShow] = useState(false);
   const handleNoteClose = () => setNoteShow(false);
@@ -56,8 +59,6 @@ function CourseDetail() {
   useEffect(() => {
     fetchChapters();
   }, []); 
-   
-
 
   return (
     <>
@@ -118,15 +119,13 @@ function CourseDetail() {
                          {/* Course lecture */}
                          {item.items.map((value, itemIndex) => (
                           <div className="d-flex justify-content-between align-items-center" key={`item-${itemIndex}`}> 
-                           
-                           <div className="position-relative d-flex align-items-center">
-                            <div><input type="checkbox" className="form-check-input me-4 " /> </div>
-                            {/* <a href="#" className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"><i className="fas fa-play me-0" /></a> */}
+                           <div className="position-relative d-flex align-items-center"> 
+                             <button onClick={()=> handleShow(value)} className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"><i className="fas fa-play me-0" /></button>
                               <span className="d-inline-block mb-3 h6 fw-light">
                                 {value.description}
-                              </span>
+                              </span> 
                           </div> 
-                           
+                          <div><input type="checkbox" className="form-check-input me-4 " /> </div>
                           </div>))}
                        {/* <section className="bg-blue py-7">
                          <div className="container">
@@ -337,13 +336,13 @@ function CourseDetail() {
       {/* Lecture Modal */}
       <Modal show={show} size='lg' onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Lesson: Lesson Title</Modal.Title>
+          <Modal.Title>{chapterItem.description}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ReactPlayer url={`url-here`} controls playing width={"100%"} height={"100%"} />
+          <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={null}>Close</Button>
+          <Button variant="success">Download</Button>
         </Modal.Footer>
       </Modal>
 

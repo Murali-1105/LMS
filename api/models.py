@@ -90,7 +90,7 @@ class ChapterItem(models.Model):
     video=models.FileField(upload_to='path-to-upload')
     
     def __str__(self):
-        return f"{self.chapter}-item{self.id}"
+        return f"{self.chapter} - {self.description}"
     
 
 class SubjectProgress(models.Model):
