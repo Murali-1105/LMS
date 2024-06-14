@@ -94,7 +94,7 @@ function Dashboard() {
          },
        },
      ], 
-   }; 
+   };  
     
   const options = {
     responsive: true,  
@@ -110,21 +110,26 @@ function Dashboard() {
         }
       },  
     },  
+    
     scales: {
       x: {
         grid: {
           color: 'rgba(0, 0, 0, 0.1)',
         },
         ticks: {
-          fontColor: '#333', 
+          fontColor: '#333',  
+          font: {
+            size: 8, 
+          },
         },
       },
-      y: {
+      y: { 
+        beginAtZero: true,
         min: 0,
         max: 100,
         ticks: {
           stepSize: 10, 
-          fontColor: '#333',
+          fontColor: '#333',  
         },
         grid: {
           color: 'rgba(0, 0, 0, 0.1)',
@@ -139,22 +144,21 @@ function Dashboard() {
     }, 
   }; 
    
-  const labels = subjectTitle.map(label => label.length > 10 ? label.substring(0, 20) : label);
-  
+  const labels = subjectTitle 
+   
   const data = {
     labels,
-    datasets: [
-      {
+    datasets: [ 
+      { 
         label: 'Total Progress',
         data: subjectProgress,
-        backgroundColor: 'rgba(0, 123, 255, 0.8)',
+        backgroundColor: 'rgba(0, 123, 255, 0.8)', 
       },
       {
         label: 'Quiz Mark',
         data: [11,18,29,30,50],
         backgroundColor: 'rgba(220, 53, 69, 0.8)',
-      },
-
+      }, 
     ],
   }; 
     
@@ -237,7 +241,7 @@ function Dashboard() {
              </div>   
           </div>   
           <div className="container-fluid card-container px-2 px-sm-4 px-xxl-5"> 
-               <h4 className="my-4"><i class="bi bi-file-earmark-fill pe-2"></i>My Subjects</h4>
+               <h4 className="my-4"><i class="bi bi-book-half pe-2"></i>My Subjects</h4>
               <div>
                 {loading && <p><i className="fas fa-spinner fa-spin"></i></p>}
                 {error && <p>Error: {error.message}</p>} 
@@ -246,8 +250,8 @@ function Dashboard() {
                  {subjects.map((subject, index) => (  
                    <div className="card px-2" key={index}> 
                      <img src={subject.img} className="img-fluid card-img-top rounded-top-3" alt={subject.title} style={{ width: "100%", height: "200px", objectFit: "cover",}}/> 
-                     <div className="card-body rounded-bottom-3">
-                       <h5 className='card-title fs-6'>{subject.title}</h5>
+                     <div className="card-body shadow-sm rounded-bottom-3">
+                       <h5 className='card-title fs-6' style={{height: '25px'}}>{subject.title}</h5>
                        <div className="mt-5">
                          <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
                            <div

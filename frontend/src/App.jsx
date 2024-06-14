@@ -23,9 +23,9 @@ import StudentChangePassword from './views/student/ChangePassword'
 import StudentCourseDetail from './views/student/CourseDetail' 
 import StudentCourse from './views/student/Courses' 
 import StudentProfile from './views/student/Profile' 
-// import StudentQA from './views/student/QA' 
-// import StudentQADetail from './views/student/QADetail' 
-// import StudentStudentCourseLectureDetail from './views/student/StudentCourseLectureDetail' 
+import StudentQA from './views/student/QA' 
+import StudentQADetail from './views/student/QADetail' 
+import StudentCourseLectureDetail from './views/student/StudentCourseLectureDetail' 
 import StudentWishlist from './views/student/Wishlist' 
  
 
@@ -59,7 +59,10 @@ function App() {
             <Route path="course-detail/:id/:progress" element={<StudentCourseDetail/>} />
             <Route path="Profile/" element={<StudentProfile/>} />
             <Route path="wishlist/" element={<StudentWishlist/>} />   
-            <Route path="change-password/" element={<StudentChangePassword/>} />  
+            <Route path="change-password/" element={<StudentChangePassword/>} />   
+            <Route path='question-answer/' element={<StudentQA/>} /> 
+            <Route path='qa-deatails/' element={<StudentQADetail/>} /> 
+            <Route path='lecture-details/' element={<StudentCourseLectureDetail/>} />
           </Route>
         </Routes> 
       </MainWrapper> 

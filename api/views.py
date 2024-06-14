@@ -17,7 +17,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     
 def authenticate(request):  #Authenticating the token only if they are students
     
-    if request.method=='GET':
+    if request.method=='GET' or request.method=='POST':
         token=request.headers.get('Authorization',None)
         
         if token==None:
@@ -91,10 +91,34 @@ def get_chapter_detail(request,chapter_id):
     
     return Response({'chapteritems':chapteritemsserializer.data},status=status.HTTP_200_OK)  
     
-        
-    
+ 
+@api_view(['GET','POST'])
+def password_reset(request):
 
-            
+    decoded_token=authenticate(request)
+    
+    if decoded_token.get('message'):
+        message=decoded_token.get('message')
+        message_status=decoded_token.get('status')
+        return Response({'message':message},status=message_status)
+    
+    user_id=decoded_token.get('user_id')
+    
+    user=User.objects.get(user_id=user_id)
+    if user is None:
+        return Response({'message':"this user doesnt exist..."},status=status.HTTP_404_NOT_FOUND)
+    
+    old_password=request.data.get('currentPassword')
+    new_password=request.data.get('newPassword')
+    
+    user_password=user.check_password(old_password)
+    
+    if user_password is False:
+        return Response({'message':"current password is not right....."},status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        user.password=new_password
+        user.save()
+        return Response({'message':'password has been changed'},status=status.HTTP_201_CREATED)
         
 
     

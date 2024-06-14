@@ -83,12 +83,12 @@ function CourseDetail() {
                                 Discussion
                               </button>
                             </li>
-
+{/* 
                             <li className="nav-item me-2 me-sm-4" role="presentation">
                               <button className="nav-link mb-2 mb-md-0" id="course-pills-tab-4" data-bs-toggle="pill" data-bs-target="#course-pills-4" type="button" role="tab" aria-controls="course-pills-4" aria-selected="false">
                                 Leave a Review
                               </button>
-                            </li>
+                            </li> */}
                         </ul> 
                      </div>
                    {/* Tabs END */} 
@@ -119,13 +119,15 @@ function CourseDetail() {
                          {/* Course lecture */}
                          {item.items.map((value, itemIndex) => (
                           <div className="d-flex justify-content-between align-items-center" key={`item-${itemIndex}`}> 
-                           <div className="position-relative d-flex align-items-center"> 
+                           <div className="position-relative d-flex align-items-center justify-content-center my-2"> 
                              <button onClick={()=> handleShow(value)} className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"><i className="fas fa-play me-0" /></button>
-                              <span className="d-inline-block mb-3 h6 fw-light">
-                                {value.description}
+                              <span className="d-inline-block fs-6 fw-light">
+                                {value.description} 
                               </span> 
                           </div> 
-                          <div><input type="checkbox" className="form-check-input me-4 " /> </div>
+                          <div className="d-flex justify-content-center align-items-center"> 
+                            <a href={value.ppt} className='btn btn-sm bg-primary text-white px-3 mx-4'>PDF</a> 
+                             <input type="checkbox" className="form-check-input me-4 " /> </div>
                           </div>))}
                        {/* <section className="bg-blue py-7">
                          <div className="container">
@@ -280,21 +282,18 @@ function CourseDetail() {
                                 </div>
                               </div>
                             </div>
-                            <div
+                            {/* <div
                               className="tab-pane fade"
                               id="course-pills-4"
                               role="tabpanel"
                               aria-labelledby="course-pills-tab-4"
                             >
                               <div className="card">
-                                {/* Card header */}
                                 <div className="card-header border-bottom p-0 pb-3">
-                                  {/* Title */}
                                   <h4 className="mb-3 p-3">Leave a Review</h4>
                                   <div className="mt-2">
                                     <form className="row g-3 p-3">
 
-                                      {/* Rating */}
                                       <div className="col-12 bg-light-input">
                                         <select
                                           id="inputState2"
@@ -307,7 +306,6 @@ function CourseDetail() {
                                           <option value={5}>★★★★★ (5/5)</option>
                                         </select>
                                       </div>
-                                      {/* Message */}
                                       <div className="col-12 bg-light-input">
                                         <textarea
                                           className="form-control"
@@ -317,7 +315,6 @@ function CourseDetail() {
                                           defaultValue={""}
                                         />
                                       </div>
-                                      {/* Button */}
                                       <div className="col-12">
                                         <button type="submit" className="btn btn-primary mb-0">
                                           Post Review
@@ -327,7 +324,7 @@ function CourseDetail() {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -336,10 +333,10 @@ function CourseDetail() {
       {/* Lecture Modal */}
       <Modal show={show} size='lg' onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{chapterItem.description}</Modal.Title>
+          <Modal.Title> <h5 className='fs-6'>{chapterItem.description}</h5></Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"} />
+        <Modal.Body className='px-3'>
+          <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="success">Download</Button>

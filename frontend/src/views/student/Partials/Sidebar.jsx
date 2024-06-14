@@ -91,18 +91,18 @@ function Sidebar({ collapsed }) {
                     </li>
                     <li class="sidebar-item">
                         <Link class="sidebar-link" to={`/student/courses/`}> 
-                        <i class="bi bi-file-earmark-fill pe-2"></i>My Subjects</Link>
+                        <i class="bi bi-book-half pe-2"></i>MySubjects</Link>
                     </li> 
                     <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/question-answer/`}>
+                        <Link class="sidebar-link" to={`/student/`}>
                         <i class="bi bi-question-circle-fill pe-2"></i>Q/A</Link>
                     </li> 
                     <li class="sidebar-item">
-                        <Link class="sidebar-link">
+                        <Link class="sidebar-link" to={`/student//`}>
                         <i class="bi bi-list-task pe-2"></i>Task</Link>
                     </li>  
                     <li class="sidebar-item">
-                        <Link class="sidebar-link">
+                        <Link class="sidebar-link" to={`/student/`}>
                         <i class="bi bi-clock-history pe-2"></i>History</Link>
                     </li> 
                 </ul>

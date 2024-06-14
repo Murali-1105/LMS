@@ -54,13 +54,15 @@ class ChapterItemSerializer(ModelSerializer):
     
     class Meta:
         model=ChapterItem
-        fields=['description','video']
+        fields=['description','video','ppt']
         
     def to_representation(self, instance):
         
         ret = super().to_representation(instance)
 
-        ret['video']=settings.BASE_URL+ret['video']
+        ret['video']=settings.BASE_URL+ret['video']  
+         
+        ret['ppt']=settings.BASE_URL+ret['ppt']
 
         return ret
         

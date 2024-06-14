@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap"); 
+ 
   
 *,
 ::after,
@@ -18,7 +19,7 @@ body {
 a{
   cursor: pointer;
   text-decoration: none;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif; 
   color: var(--bs-emphasis-color);
 }
 
@@ -57,7 +58,7 @@ h4 {
   overflow: hidden;
   transition: all 0.35s ease-in-out;
   width: 100%;
-  background: var(--bs-dark-bg-subtle);
+  background: var(--bs-secondary-bg-subtle);
 } 
  
 
@@ -102,18 +103,25 @@ h4 {
   display: flex;
   align-items: center;
   justify-content: start;
-  padding: 0.8rem 1.3rem;
+  padding: 0.65rem 1.3rem;
   color: #e9ecef;
   position: relative;
-  font-size: 1rem;
-  border-left: solid 5px transparent;
+  font-size: 1rem;  
+  border-left: solid 4px transparent;  
+  overflow: hidden;
 }
 
 .sidebar-link:focus {
-  border-left: solid 5px #fff;
-  background: #ffffff3b;
-} 
-
+  border-left: solid 4px #fff;
+  background: linear-gradient(to right, #13547ac1, #80d0c7b1);   
+  animation: link 0.3s ease-out forwards; 
+}    
+ 
+@keyframes link {
+  from { width: 0%; } 
+  to { width: 100%; } 
+}
+   
 .avatar {
   height: 40px;
   width: 40px;
@@ -132,15 +140,14 @@ h4 {
   opacity: 0;
   display: block;
   transform: translateY(-10px);
-  transition:
-    opacity 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .nav-profile .dropdown-menu.show {
   visibility: visible;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0); 
+  right: 0.5rem;
 }
 
 .nav-profile.dropdown-item:hover {
@@ -173,6 +180,14 @@ h4 {
 .illustration-img {
   max-width: 150px;
   width: 100%;
+} 
+ 
+.progress-bar{ 
+  animation: loading 3s ease-out forwards;
+} 
+
+@keyframes loading {
+  from { width: 0; }
 }
 
 /* Sidebar Toggle */
@@ -233,14 +248,15 @@ h4 {
 
 /* Theme Toggler */
 
-.notify-btn:after {
-  position: absolute;
-  right: -1rem;
+.nav-notify:after {
+  position: absolute; 
+  top: 1px; 
+  right: -1rem; 
   transform: translatex(-50%);
   content: "";
   background: rgb(115, 115, 115);
   width: 1px;
-  height: 1.6rem;
+  height: 1.8rem;
   border-radius: 0.5rem;
 }
 
@@ -252,7 +268,7 @@ h4 {
 .checkbox {
   opacity: 0;
   position: absolute;
-}
+} 
 
 .checkbox-label {
   background-color: #111;
@@ -286,36 +302,26 @@ h4 {
   top: 2px;
   border-radius: 50%;
   transition: transform 0.2s linear;
+} 
+ 
+.ball:hover {
+  box-shadow: 0 0 5px 5px var(--bs-primary);
 }
 
 .checkbox:checked + .checkbox-label .ball {
   transform: translateX(24px);
 }
  
-/*  
-.card-title {
+.invalid-feedback {
   display: block;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  box-sizing: border-box; 
-  -ms-overflow-style: none;  
-  scrollbar-width: none;
-} 
- 
-.card-title::-webkit-scrollbar {
+}
+
+.profile-picture img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.account-settings-fileinput {
   display: none;
 }
-
-.overflow-scroll {
-  animation: scroll-text 10s linear infinite;
-}
-
-@keyframes scroll-text {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-} */

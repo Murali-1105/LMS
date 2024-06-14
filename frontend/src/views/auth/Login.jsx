@@ -26,10 +26,10 @@ function Login() {
   } 
   return (
     <>  
-      <section className="container d-flex flex-column" style={{ marginTop: "150px" }}>
+      <section className="container d-flex  flex-column" style={{ marginTop: "150px" }}>
         <div className="row align-items-center justify-content-center g-0 h-lg-100 py-8 ">
           <div className="col-lg-4 col-md-8 py-8 py-xl-0  ">
-            <div className="card shadow bg-dark rounded-4">
+            <div className="card shadow-lg bg-dark rounded-4">
               <div className="card-body p-4 p-lg-5 p-md-5 p-sm-5 text-white">
                 <div className="mb-4 text-center"> 
                   <img src="/public/MH_COCKPIT_LOGO.png" alt="MH_COCKPIT" className='img-fluid w-50' />
