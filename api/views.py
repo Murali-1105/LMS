@@ -122,8 +122,40 @@ def password_reset(request):
         
 
     
+@api_view(['GET'])
+def get_quiz_id(request,chapter_id):
     
+    decoded_token=authenticate(request)
+    
+    if decoded_token.get('message'):
+        message=decoded_token.get('message')
+        message_status=decoded_token.get('status')
+        return Response({'message':message},status=message_status)
+    
+    user_id=decoded_token.get('user_id')
+    
+    chapterquizes=ChapterQuiz.objects.filter(chapter__id=chapter_id)
+    
+    chapterquizid=[quiz.id for quiz in chapterquizes]
+    return Response({'chapterquizid':chapterquizid},status=status.HTTP_201_CREATED)
 
+@api_view(['GET']) 
+def get_quiz(request,quiz_id):
+    
+    decoded_token=authenticate(request)
+    
+    if decoded_token.get('message'):
+        message=decoded_token.get('message')
+        message_status=decoded_token.get('status')
+        return Response({'message':message},status=message_status)
+    try:
+        chapterquiz=ChapterQuiz.objects.get(id=quiz_id)
+    except ChapterQuiz.DoesNotExist:
+        return Response({'message': 'Quiz not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    chapterquizserializer=api_serializers.ChapterQuizSerializer(chapterquiz)
+    print(chapterquizserializer.data)
+    return Response(data=chapterquizserializer.data,status=status.HTTP_200_OK)
     
     
         

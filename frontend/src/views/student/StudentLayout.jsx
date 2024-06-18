@@ -17,7 +17,7 @@ const StudentLayout = () => {
          <Sidebar collapsed={collapsed} />
          <div className="main-container">
              <Header toggleSidebar={toggleSidebar} /> 
-             <section className='content px-3 py-2'>  
+             <section className='content'>  
                <Outlet /> 
              </section>  
          </div> 

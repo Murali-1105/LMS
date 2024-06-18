@@ -1,0 +1,29 @@
+ 
+.login-container { 
+  display: grid;
+  place-items: center;
+  gap: 50px;
+  margin: 0;
+  height: 100vh;
+  color: #ffffff; 
+  background: url(/public/Login-page.jpg); 
+  background-position: center; 
+  background-repeat: no-repeat;  
+  background-size: cover;  
+} 
+  
+/*    
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } */
+
+.login-card{   
+    background-color: transparent;
+    backdrop-filter: blur(20px);   
+    color: #fff;
+}

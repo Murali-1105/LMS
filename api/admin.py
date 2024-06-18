@@ -77,7 +77,9 @@ admin.site.register(Chapter,ChapterAdmin)
 admin.site.register(ChapterItem,ChapterItemAdmin)
 admin.site.register(SubjectProgress)
 admin.site.register(ChapterQuiz)
-admin.site.register(ChapterQuizAnswer)
+admin.site.register(StudentChapterQuizAnswer) 
+admin.site.register(StudentChapterQuizProgressPercent) 
+admin.site.register(SubjectNotes)
 
 
 

@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { Link } from "react-router-dom"; 
 import useAxios from "../../utils/useAxios";
 
-// import "./Css/Dashboard.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";  
+import "./Css/Dashboard.css";
+import Swiper from 'swiper'; 
+import { Navigation} from 'swiper/modules';
+import "swiper/css";
+import "swiper/css/navigation";
 
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
- 
+  
+Swiper.use([Navigation]); 
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -17,8 +20,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-); 
-
+);  
+ 
  
 function Dashboard() {       
   const [subjects, setSubjects] = useState([]); 
@@ -26,16 +29,12 @@ function Dashboard() {
   const [subjectProgress, setSubjectProgress] = useState([]); 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);  
-  const [isScrolling, setIsScrolling] = useState(false); 
+  const [hasAnimated, setHasAnimated] = useState(false); 
    
-  const handleMouseOver = () => {
-    setIsScrolling(true);
-  };
+  useEffect(() => {
+    setHasAnimated(true);
+  }, []);
 
-  const handleMouseOut = () => {
-    setIsScrolling(false);
-  };
-   
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
@@ -64,37 +63,37 @@ function Dashboard() {
   }, []); 
 
     
-  const settings = {
-     dots: false,
-     infinite: false,
-     speed: 500,
-     slidesToShow: 4,
-     slidesToScroll: 1,
-     arrows: true,
-     responsive: [
-       {
-         breakpoint: 1024,
-         settings: {
-           slidesToShow: 3,
-           slidesToScroll: 1,
-         },
-       },
-       {
-         breakpoint: 768,
-         settings: {
-           slidesToShow: 2,
-           slidesToScroll: 1,
-         },
-       },
-       {
-         breakpoint: 480,
-         settings: {
-           slidesToShow: 1,
-           slidesToScroll: 1,
-         },
-       },
-     ], 
-   };  
+  const swiperRef = useRef(null);
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      new Swiper(swiperRef.current, {
+        loop: false,
+        spaceBetween: 25,
+        grabCursor: true, 
+
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+          dynamicBullets: true,
+        }, 
+
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }, 
+
+        breakpoints: {
+          600: {
+            slidesPerView: 2,
+          },
+          968: {
+            slidesPerView: 3,
+          },  
+        },
+      }); 
+    }
+  }, []);
     
   const options = {
     responsive: true,  
@@ -163,12 +162,13 @@ function Dashboard() {
   }; 
     
  return ( 
-     <>  
-       <div class="container-fluid px-2 px-sm-4 px-xxl-5"> 
+     <>   
+      <section className="section px-2 px-lg-5 py-2">
+       <div class="container-fluid "> 
           <h4 className="my-4"><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
           <div class="row">  
-               <div className="col-12 col-xl-8 mb-4"> 
-                   <div class="card border-0 shadow-sm w-100 h-100"> 
+               <div className="d-none d-lg-block col-12 col-xl-8 mb-4 "> 
+                   <div class="card border-0 shadow-sm w-100 h-100">  
                       <div className="card-body d-flex align-items-center justify-content-center">
                         <Bar options={options} data={data}/> 
                       </div>
@@ -239,45 +239,53 @@ function Dashboard() {
                    </div> 
                 </div>  
              </div>   
-          </div>   
-          <div className="container-fluid card-container px-2 px-sm-4 px-xxl-5"> 
-               <h4 className="my-4"><i class="bi bi-book-half pe-2"></i>My Subjects</h4>
+          </div>    
+          <div className="container-fluid"> 
+             <h4 className="my-4"><i class="bi bi-book-half pe-2"></i>My Subjects</h4> 
+             <div className="d-flex aligan-items-center justify-content-center">
               <div>
                 {loading && <p><i className="fas fa-spinner fa-spin"></i></p>}
                 {error && <p>Error: {error.message}</p>} 
+              </div> 
+              <div className="card-container swiper " >  
+                <div className="card-content" ref={swiperRef}>
+                 <div className="swiper-wrapper">
+                          {subjects.map((subject) => (
+                            <div key={subject.id} className="card card-box swiper-slide">
+                                <img src={subject.img} alt="avatar" className="img-fluid card-img-top w-100 h-100"/>
+                              <div className="card-body">
+                                  <h3 className="card-title fs-6">{subject.title}</h3>
+                                     <div className="mt-5">
+                                         <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
+                                            <div
+                                               className={`progress-bar ${hasAnimated ? 'animate' : ''}`}
+                                               role="progressbar"
+                                               style={{ width: `${subject.progress}%` }}
+                                               aria-valuenow={subject.progress}
+                                               aria-valuemin="0"
+                                               aria-valuemax="100"> 
+                                             </div> 
+                                          </div> 
+                                           {subject.progress}%
+                                        </div>
+                               <Link className="btn btn-primary mt-3 w-100" to={`/student/course-detail/${subject.id}/${subject.progress}`}>  
+                                 {subject.buttontext}continue 
+                               </Link>
+                              </div>
+                            </div>
+                          ))}
+                       </div>  
+                    </div>
+                      <div className="swiper-button-next">
+                        <i class="bi bi-chevron-right"></i>
+                      </div>
+                      <div className="swiper-button-prev">
+                        <i class="bi bi-chevron-left"></i>
+                      </div>
+                  </div>   
+                </div>
               </div>
-               <Slider {...settings}>
-                 {subjects.map((subject, index) => (  
-                   <div className="card px-2" key={index}> 
-                     <img src={subject.img} className="img-fluid card-img-top rounded-top-3" alt={subject.title} style={{ width: "100%", height: "200px", objectFit: "cover",}}/> 
-                     <div className="card-body shadow-sm rounded-bottom-3">
-                       <h5 className='card-title fs-6' style={{height: '25px'}}>{subject.title}</h5>
-                       <div className="mt-5">
-                         <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
-                           <div
-                             className="progress-bar"
-                             role="progressbar"
-                             style={{ width: `${subject.progress}%` }}
-                             aria-valuenow={subject.progress}
-                             aria-valuemin="0"
-                             aria-valuemax="100"
-                           ></div>
-                         </div>
-                         {subject.progress}%
-                       </div>
-                       <Link
-                         className="btn btn-primary mt-3 w-100"
-                         to={`/student/course-detail/${subject.id}/${subject.progress}`}
-                       >
-                         {" "}
-                         {subject.buttontext} 
-                         continue
-                       </Link>
-                     </div>
-                   </div> 
-                ))}
-               </Slider>
-          </div> 
+         </section>
      </>
  );
 }
