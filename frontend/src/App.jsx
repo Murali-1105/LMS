@@ -44,12 +44,12 @@ function App() {
           <Route path="/create-new-password/"  element={<CreateNewPassword />}  />
 
           {/* Base Routes */} 
-          <Route path="/" element={<Index />} />
+          {/* <Route path="/" element={<Index />} />
           <Route path="/course-detail/:slug/" element={<CourseDetail />} />
           <Route path="/cart/" element={<Cart />} />
           <Route path="/checkout/:order_oid/" element={<Checkout />} />
           <Route path="/payment-success/:order_oid/" element={<Success />}/>
-          <Route path="/search/" element={<Search />} />
+          <Route path="/search/" element={<Search />} /> */}
             
       
           {/* Student Routes */} 

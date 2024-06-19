@@ -80,17 +80,17 @@ class Chapter(models.Model):
 
     def __str__(self):
         """String representation of the Chapter."""
-        return self.name
+        return f"{self.name}-{self.id}"
 
 class ChapterItem(models.Model):
     
     description=models.TextField()
     chapter=models.ForeignKey(Chapter,on_delete=models.PROTECT,related_name='items')
     ppt=models.FileField(upload_to='path-to-upload')
-    video=models.FileField(upload_to='path-to-upload')
+    video=models.FileField(upload_to='path-to-upload',default='https://www.youtube.com/watch?v=SqcY0GlETPk')
     
-    def __str__(self):
-        return f"{self.chapter} - {self.description}"
+    def _str_(self):
+        return f"{self.chapter}-item{self.id}"
     
 
 class SubjectProgress(models.Model):
@@ -99,13 +99,10 @@ class SubjectProgress(models.Model):
     progress=models.PositiveSmallIntegerField()
     completed=models.BooleanField(default=False)
     
-    def save(self,*args,**kwargs):
+    def save(self,args,*kwargs):
         if self.progress==100:
             self.completed=True
-        super().save(*args,**kwargs)   
-
-    def __str__(self):
-        return f"{self.student.name}-subject-{self.subject.title}"
+        super().save(args,*kwargs)
 
     
 class ChapterQuiz(models.Model):
@@ -125,19 +122,25 @@ class ChapterQuiz(models.Model):
     choice_d=models.CharField(max_length=200)
     correct_answer=models.CharField(max_length=1,choices=answer)
     
+
 class StudentChapterQuizAnswer(models.Model):
     
-    subjectquiz=models.ForeignKey(ChapterQuiz,on_delete=models.CASCADE)
+    chapterquiz=models.ForeignKey(ChapterQuiz,on_delete=models.CASCADE)
+    chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
     student=models.ForeignKey(Student,on_delete=models.CASCADE)
     is_correct=models.BooleanField(default=False)
+    
+    def save(self,*args,**kwargs):
+        self.chapter=self.chapterquiz.chapter
+        super().save(*args,**kwargs)
     
     
 class StudentChapterQuizProgressPercent(models.Model):
     
     chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
-    chapterquiz=models.ForeignKey(ChapterQuiz,on_delete=models.CASCADE)
+    # chapterquiz=models.ForeignKey(ChapterQuiz,on_delete=models.CASCADE)
     student=models.ForeignKey(Student,on_delete=models.CASCADE)
-    progress=models.SmallIntegerField()
+    progress=models.DecimalField(max_digits=4,decimal_places=2)
     
     
     def quiz_count(self):
@@ -159,14 +162,3 @@ class StudentChapterQuizProgressPercent(models.Model):
 class SubjectNotes(models.Model):
     title=models.CharField(max_length=100)
     description=models.TextField()
-        
-    
-        
-        
-        
-    
-    
-    
-
-        
-    

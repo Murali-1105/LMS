@@ -5,18 +5,22 @@ import Header from "./Partials/Header";
 
 const StudentLayout = () => {    
 
-    const [collapsed, setCollapsed] = useState(false); 
+  const [collapsed, setCollapsed] = useState(false); 
 
-    const toggleSidebar = () => {
+  const toggleSidebar = () => {
         setCollapsed(!collapsed);
-      }; 
+      };   
+     
+  const closeSidebar = () => {
+    setCollapsed(false);
+  };
 
   return (
     <> 
       <div className='warpper d-flex'>
-         <Sidebar collapsed={collapsed} />
+         <Sidebar collapsed={collapsed} closeSidebar={closeSidebar}/>
          <div className="main-container">
-             <Header toggleSidebar={toggleSidebar} /> 
+             <Header toggleSidebar={toggleSidebar}  /> 
              <section className='content'>  
                <Outlet /> 
              </section>  

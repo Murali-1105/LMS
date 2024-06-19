@@ -109,18 +109,17 @@ h4 {
 .sidebar-link:focus {
   border-left: solid 4px #fff;
   background: linear-gradient(to right, #13547ac1, #80d0c7b1);   
-  animation: link 0.3s ease-out forwards; 
 }    
  
-@keyframes link {
-  from { width: 0%; } 
-  to { width: 100%; } 
+.sidebar-toggle:checked ~ #sidebar.collapsed{
+  margin-left: 0px;
 }
+
    
 .avatar {
   height: 40px;
   width: 40px;
-}
+} 
 
 .navbar-expand .navbar-nav {
   margin-left: auto;

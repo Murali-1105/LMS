@@ -164,7 +164,7 @@ function Dashboard() {
  return ( 
      <>   
       <section className="section px-2 px-lg-5 py-2">
-       <div class="container-fluid "> 
+       <div class="container-fluid"> 
           <h4 className="my-4"><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
           <div class="row">  
                <div className="d-none d-lg-block col-12 col-xl-8 mb-4 "> 
@@ -239,8 +239,6 @@ function Dashboard() {
                    </div> 
                 </div>  
              </div>   
-          </div>    
-          <div className="container-fluid"> 
              <h4 className="my-4"><i class="bi bi-book-half pe-2"></i>My Subjects</h4> 
              <div className="d-flex aligan-items-center justify-content-center">
               <div>
@@ -277,10 +275,10 @@ function Dashboard() {
                        </div>  
                     </div>
                       <div className="swiper-button-next">
-                        <i class="bi bi-chevron-right"></i>
+                      <i class="bi bi-arrow-right-circle"></i>
                       </div>
                       <div className="swiper-button-prev">
-                        <i class="bi bi-chevron-left"></i>
+                      <i class="bi bi-arrow-left-circle"></i>
                       </div>
                   </div>   
                 </div>

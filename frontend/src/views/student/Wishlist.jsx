@@ -1,86 +1,114 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function Wishlist() {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }, []);
+
+    const cardData = [
+        {
+            id: 1,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 1',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        },
+        {
+            id: 2,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 2',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        }, 
+        {
+            id: 3,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 1',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        },
+        {
+            id: 4,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 2',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        }, 
+        {
+            id: 5,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 1',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        },
+        {
+            id: 6,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 2',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        }, 
+        {
+            id: 7,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 1',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        },
+        {
+            id: 8,
+            imgSrc: '/public/Login-page.jpg',
+            title: 'Card Title 2',
+            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
+            link: '#'
+        },
+    ];
+
     return (
-        <>
-                <div className="container">
-                    <div className="row mt-0 mt-md-4">
-                        <div className="col-lg-9 col-md-8 col-12">
-                            <h4 className="mb-0 mb-4"> <i className='fas fa-heart'></i> My Subjects </h4>
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                                        <div className="col-lg-4">
-                                            {/* Card */}
-                                            <div className="card card-hover">
-                                                <Link to={`/course-detail/slug/`}>
-                                                    <img
-                                                        src="https://geeksui.codescandy.com/geeks/assets/images/course/course-css.jpg"
-                                                        alt="course"
-                                                        className="card-img-top"
-                                                    />
-                                                </Link>
-                                                {/* Card Body */}
-                                                <div className="card-body">
-                                                    <div className="d-flex justify-content-between align-items-center mb-3">
-                                                        <span className="badge bg-info">Intermediate</span>
-                                                        <a href="#" className="fs-5">
-                                                            <i className="fas fa-heart text-danger align-middle" />
-                                                        </a>
-                                                    </div>
-                                                    <h4 className="mb-2 text-truncate-line-2 ">
-                                                        <Link to={`/course-detail/slug/`} className="text-inherit text-decoration-none text-dark fs-5">
-                                                            How to easily create a website with JavaScript
-                                                        </Link>
-                                                    </h4>
-                                                    <small>By: Claire Evans</small> <br />
-                                                    <small>16k Students</small> <br />
-                                                    <div className="lh-1 mt-3 d-flex">
-                                                        <span className="align-text-top">
-                                                            <span className="fs-6">
-                                                                <i className='fas fa-star text-warning'></i>
-                                                                <i className='fas fa-star text-warning'></i>
-                                                                <i className='fas fa-star text-warning'></i>
-                                                                <i className='fas fa-star text-warning'></i>
-                                                                <i className='fas fa-star-half text-warning'></i>
-                                                            </span>
-                                                        </span>
-                                                        <span className="text-warning">4.5</span>
-                                                        <span className="fs-6 ms-2">(9,300)</span>
-                                                    </div>
-                                                </div>
-                                                {/* Card Footer */}
-                                                <div className="card-footer">
-                                                    <div className="row align-items-center g-0">
-                                                        <div className="col">
-                                                            <h5 className="mb-0">$39.00</h5>
-                                                        </div>
-                                                        <div className="col-auto">
-                                                            <a href="#" className="text-inherit text-decoration-none btn btn-primary">
-                                                                <i className="fas fa-shopping-cart text-primary me-2 text-white" />
-                                                                Enroll Now
-                                                            </a>
-                                                            <a href="#" className="text-inherit text-decoration-none btn btn-danger ms-2">
-                                                                <i className="fas fa-trash text-white" />
-                                                            </a>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+        <section className='px-2 px-lg-5 py-2'>
+            <div className='container-fluid'>
+                <h4 className="my-4 text-center"><i className="bi bi-book-half"></i> My Subjects </h4>
+                <div className='row'>
+                    {cardData.map(card => (
+                        <div key={card.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
+                            {isLoading ? (
+                                <div className="card" aria-hidden="true"> 
+                                    <div className='card-img-top p-5 text-center' alt="Card placeholder" ><i className="fas fa-spinner fa-spin"></i></div>
+                                    <div className="card-body">
+                                        <h5 className="card-title placeholder-glow">
+                                            <span className="placeholder col-6"></span>
+                                        </h5>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <button className="btn btn-primary disabled placeholder col-6" aria-disabled="true"></button>
                                     </div>
-
                                 </div>
-                            </div>
-
+                            ) : (
+                                <div className="card">
+                                    <img src={card.imgSrc} className="card-img-top" alt="Card" />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{card.title}</h5>
+                                        <p className="card-text">{card.text}</p>
+                                        <Link to={card.link} className="btn btn-primary btn-sm w-100">Go somewhere</Link>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    ))}
                 </div>
-        </>
-    )
+            </div>
+        </section>
+    );
 }
 
-export default Wishlist
+export default Wishlist;

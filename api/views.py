@@ -155,7 +155,84 @@ def get_quiz(request,quiz_id):
     
     chapterquizserializer=api_serializers.ChapterQuizSerializer(chapterquiz)
     print(chapterquizserializer.data)
-    return Response(data=chapterquizserializer.data,status=status.HTTP_200_OK)
+    return Response(data=chapterquizserializer.data,status=status.HTTP_200_OK) 
+ 
+@api_view(['POST'])
+def quiz_evaluate(request,quiz_id):
+    
+    decoded_token=authenticate(request)
+    
+    if decoded_token.get('message'):
+        message=decoded_token.get('message')
+        message_status=decoded_token.get('status')
+        return Response({'message':message},status=message_status)
+    
+    selected_option=request.data.get('selected_option')
+    quizanswer=ChapterQuiz.objects.get(id=quiz_id).correct_answer
+    print(quizanswer)
+    print(selected_option)
+    
+    if quizanswer == selected_option:
+        is_correct=True
+    else:
+        is_correct=False
+        
+    
+    user_id=decoded_token.get('user_id')
+    
+    try:
+        quizanswerexist=StudentChapterQuizAnswer.objects.filter(chapterquiz_id=quiz_id,student_id=user_id).exists()
+        print(quizanswerexist)
+        if quizanswerexist:
+            
+            studentquizanswer=StudentChapterQuizAnswer.objects.get(chapterquiz_id=quiz_id,student_id=user_id)
+            studentquizanswer.is_correct=is_correct
+            studentquizanswer.save()
+            return Response({'message':'student answer is saved'},status=status.HTTP_201_CREATED)
+        else:
+           
+           studentquizanswer = StudentChapterQuizAnswer.objects.create(chapterquiz_id=quiz_id,student_id=user_id,is_correct=is_correct)
+           studentquizanswer.save()
+           return Response({'message':'student answer is saved'},status=status.HTTP_201_CREATED)
+           
+    except StudentChapterQuizAnswer.DoesNotExist :
+        return Response({'error':"error"})
+
+@api_view(['POST'])   
+def chapter_quiz_evaluate(request):
+    
+    decoded_token=authenticate(request)
+    
+    if decoded_token.get('message'):
+        message=decoded_token.get('message')
+        message_status=decoded_token.get('status')
+        return Response({'message':message},status=message_status)
+    
+    user_id=decoded_token.get('user_id')
+    chapter_id=request.data.get('chapter_id')
+    
+    chapterquizes=ChapterQuiz.objects.filter(chapter_id=chapter_id)
+    
+    chapterquizcount=chapterquizes.count()
+    print(chapterquizcount)
+    studentchapterquizanswercorrectcount=StudentChapterQuizAnswer.objects.filter(chapter_id=chapter_id,is_correct=True).count()
+    print(studentchapterquizanswercorrectcount)
+    
+    progress=(studentchapterquizanswercorrectcount/chapterquizcount)*100
+    
+    studentchapterprogressexists=StudentChapterQuizProgressPercent.objects.filter(chapter_id=chapter_id,student_id=user_id).exists()
+    
+    if studentchapterprogressexists:
+        
+        studentchapterprogress=StudentChapterQuizProgressPercent.objects.get(chapter_id=chapter_id,student_id=user_id)
+        studentchapterprogress.progress=progress
+        studentchapterprogress.save() 
+    else:
+        studentchapterprogress=StudentChapterQuizProgressPercent.objects.create(chapter_id=chapter_id,student_id=user_id,progress=progress)
+        studentchapterprogress.save() 
+        
+    
+    return Response({'message':'Progress have been saved','progress':studentchapterprogress.progress},status=status.HTTP_201_CREATED)
     
     
         
