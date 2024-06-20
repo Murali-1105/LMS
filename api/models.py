@@ -140,7 +140,7 @@ class StudentChapterQuizProgressPercent(models.Model):
     chapter=models.ForeignKey(Chapter,on_delete=models.CASCADE)
     # chapterquiz=models.ForeignKey(ChapterQuiz,on_delete=models.CASCADE)
     student=models.ForeignKey(Student,on_delete=models.CASCADE)
-    progress=models.DecimalField(max_digits=4,decimal_places=2)
+    progress=models.IntegerField()
     
     
     def quiz_count(self):

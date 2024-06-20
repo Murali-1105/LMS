@@ -1,4 +1,5 @@
 import React, { useState ,useEffect } from 'react' 
+import { Link } from "react-router-dom";  
 import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player' 
 import Button from 'react-bootstrap/Button';
@@ -27,15 +28,10 @@ function CourseDetail() {
 
   const [chapter,setChapter]=useState([])
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const param=useParams()
 
-  // const fetchChapterDetail = async () => {
-  //     await useAxios().get(`user/subject/${param.id}`).then((res)=>{
-  //       setChapter(res.data)
-  //       console.log(res.data);
-  //     })
-  // }
+
   const fetchChapters = async () => {
     try {
       const response = await useAxios().get(`/user/subject/${param.id}`);
@@ -62,91 +58,68 @@ function CourseDetail() {
 
   return (
     <>
-              
-             <div className="container-fluid my-4">
-                 <div className="card rounded-2 p-0 mt-n5">
-                   {/* Tabs START */}
-                     <div className="card-header border-bottom px-4 pt-3 pb-0">
-                        <ul className="nav nav-bottom-line py-0" id="course-pills-tab" role="tablist">
-                            <li className="nav-item me-2 me-sm-4" role="presentation">
-                              <button className="nav-link mb-2 mb-md-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
-                                Subject units
+           <section className='px-2 px-lg-5 py-2'>
+             <div className="container-fluid mt-4">
+                 <div className="rounded-2">
+                     <div className="pb-0">
+                        <ul className="d-flex justify-content-center align-items-center" id="course-pills-tab" role="tablist">
+                            <li className="me-2 me-sm-4">
+                              <button className="btn border-0 text-secondary fw-bold active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
+                               LESSION
                               </button>
                             </li>
-                            <li className="nav-item me-2 me-sm-4" role="presentation">
-                              <button className="nav-link mb-2 mb-md-0"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
-                                Notes
+                            <li className="me-2 me-sm-4">
+                              <button className="btn border-0 text-secondary fw-bold"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
+                                NOTES
                               </button>
                             </li>
-                            <li className="nav-item me-2 me-sm-4" role="presentation">
-                              <button className="nav-link mb-2 mb-md-0" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
-                                Discussion
+                            <li className="me-2 me-sm-4">
+                              <button className="btn border-0 text-secondary fw-bold" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
+                                DISCUSSION
                               </button>
                             </li>
-{/* 
-                            <li className="nav-item me-2 me-sm-4" role="presentation">
-                              <button className="nav-link mb-2 mb-md-0" id="course-pills-tab-4" data-bs-toggle="pill" data-bs-target="#course-pills-4" type="button" role="tab" aria-controls="course-pills-4" aria-selected="false">
-                                Leave a Review
-                              </button>
-                            </li> */}
                         </ul> 
-                     </div>
-                   {/* Tabs END */} 
-                     
+                     </div> 
 
-                   {/* Tab contents START */}
-                     <div className="card-body p-sm-4">
-                        <div className="tab-content" id="course-pills-tabContent">
-                         {/* Content START */}
-                          <div className="tab-pane fade show active"  id="course-pills-1"  role="tabpanel"  aria-labelledby="course-pills-tab-1" > 
-                           {/* Accordion START */}
-                            <div className="accordion accordion-icon accordion-border" id="accordionExample2">
-                              <div className="progress mb-3">
-                                <div className="progress-bar" role="progressbar" style={{ width: `${param.progress}%` }} aria-valuenow={param.progress} aria-valuemin={0} aria-valuemax={100}> 
-                                 {param.progress}%
-                               </div>
-                              </div>
-                   {/* Item */}
+                 <div className="px-sm-4 pt-sm-0">
+                  <div className="tab-content" id="course-pills-tabContent">
+                    <div className="tab-pane fade show active"  id="course-pills-1"  role="tabpanel"  aria-labelledby="course-pills-tab-1" > 
+                        <div className="accordion accordion-icon accordion-border" id="accordionExample2">
+                           <div className="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow={param.progress} aria-valuemin="0" aria-valuemax="100">
+                             <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: `${param.progress}%` }}> 
+                               {param.progress}%
+                             </div>
+                           </div> 
                    {chapter.map((item, Index) => (
-                      <div className="accordion-item mb-3 border border-2 rounded-3">
-                        <h6 className="accordion-header font-base"  id="heading-1">
+                      <div className="accordion-item mb-2 border border-2 rounded-3">
+                        <h6 className="accordion-header"  id="heading-1">
                              <button className="accordion-button fw-bold rounded d-sm-flex d-inline-block collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${Index}`} aria-expanded="true" aria-controls={`collapse-${Index}`}>  
                                {item.name}
-                             </button>
+                             </button> 
                         </h6>
                       <div id={`collapse-${Index}`} className="accordion-collapse collapse" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
-                       <div className="accordion-body mt-3">
-                         {/* Course lecture */}
+                       <div className="accordion-body px-4 px-md-5">
                          {item.items.map((value, itemIndex) => (
-                          <div className="d-flex justify-content-between align-items-center" key={`item-${itemIndex}`}> 
-                           <div className="position-relative d-flex align-items-center justify-content-center my-2"> 
-                             <button onClick={()=> handleShow(value)} className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"><i className="fas fa-play me-0" /></button>
-                              <span className="d-inline-block fs-6 fw-light">
-                                {value.description} 
-                              </span> 
+                          <div className="d-flex justify-content-between align-items-center my-2" key={`item-${itemIndex}`}>  
+                           <div className="position-relative d-flex align-items-center justify-content-center">  
+                              <div style={{transform: "rotate(90deg)"}} className='me-3'><i class="bi bi-airplane-fill"></i></div>  
+                              <span className="fs-6 text-base ">{value.description}</span> 
                           </div> 
-                          <div className="d-flex justify-content-center align-items-center"> 
-                            <a href={value.ppt} className='btn btn-sm bg-primary text-white px-3 mx-4'>PDF</a> 
-                             <input type="checkbox" className="form-check-input me-4 " /> </div>
-                          </div>))}
-                       {/* <section className="bg-blue py-7">
-                         <div className="container">
-                           <ReactPlayer url='https://youtu.be/U2Sjl89AR2A?si=nxyMVHrjvMPsoxCM' width={"100%"} height={600} />
+                          <div className="d-flex justify-content-center align-items-center ms-2 ms-md-4 ms-lg-5">  
+                            <a  className="" onClick={()=> handleShow(value)}><i class="bi bi-play-circle fs-4"></i></a>
+                            <a href={value.ppt} className='ms-3 mx-sm-4'><i class="bi bi-filetype-pdf fs-4"></i></a> 
+                           </div>
+                          </div>))} 
+                          <div className='mt-4 d-flex justify-content-center align-items-center'>
+                          <Link to={`/student/quiz/${item.id}`}className='btn btn-secondary btn-sm m-2'>Start Quiz</Link>  
                          </div>
-                        </section> */}
                        </div>
                     </div>
                    </div>))}
                  </div>
-                {/* Accordion END */}
                </div>
 
-                            <div
-                              className="tab-pane fade"
-                              id="course-pills-2"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-2"
-                            >
+                            <div className="tab-pane fade" id="course-pills-2" role="tabpanel" aria-labelledby="course-pills-tab-2">
                               <div className="card">
                                 <div className="card-header border-bottom p-0 pb-3">
                                   <div className="d-sm-flex justify-content-between align-items-center">
@@ -217,45 +190,30 @@ function CourseDetail() {
                                   <hr />
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              className="tab-pane fade"
-                              id="course-pills-3"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-3"
-                            >
-                              <div className="card">
-                                {/* Card header */}
-                                <div className="card-header border-bottom p-0 pb-3">
-                                  {/* Title */}
-                                  <h4 className="mb-3 p-3">Discussion</h4>
+                            </div> 
+                            
+                            <div className="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
+                              <div className="">
+                                <div className="border-bottom p-0 pb-3">
                                   <form className="row g-4 p-3">
-                                    {/* Search */}
                                     <div className="col-sm-6 col-lg-9">
                                       <div className="position-relative">
-                                        <input className="form-control pe-5 bg-transparent" type="search" placeholder="Search" aria-label="Search" />
+                                        <input className="form-control pe-5" type="search" placeholder="Search" aria-label="Search" />
                                         <button className="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
                                           <i className="fas fa-search fs-6 " />
                                         </button>
                                       </div>
                                     </div>
                                     <div className="col-sm-6 col-lg-3">
-                                      <a
-                                        href="#"
-                                        className="btn btn-primary mb-0 w-100"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalCreatePost"
-                                      >
+                                      <a href="#" className="btn btn-primary mb-0 w-100" data-bs-toggle="modal" data-bs-target="#modalCreatePost">
                                         Ask Question
                                       </a>
                                     </div>
                                   </form>
                                 </div>
-                                {/* Card body */}
-                                <div className="card-body p-0 pt-3">
+                                <div className=" p-0 pt-3">
                                   <div className="vstack gap-3 p-3">
-                                    {/* Question item START */}
-                                    <div className="shadow rounded-3 p-3">
+                                    <div className="shadow rounded-3 p-3 bg-light">
                                       <div className="d-sm-flex justify-content-sm-between mb-3">
                                         <div className="d-flex align-items-center">
                                           <div className="avatar avatar-sm flex-shrink-0">
@@ -491,8 +449,8 @@ function CourseDetail() {
 
           </div>
         </Modal.Body>
-      </Modal> 
-
+      </Modal>  
+    </section>
     </>
   )
 }

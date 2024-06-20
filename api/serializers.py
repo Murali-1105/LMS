@@ -73,7 +73,7 @@ class ChapterSerializer(ModelSerializer):
     
     class Meta:
         model=Chapter
-        fields=['name','description','items']
+        fields=['id','name','description','items']
 
     def get_items(self,obj):
         items=obj.items.all()

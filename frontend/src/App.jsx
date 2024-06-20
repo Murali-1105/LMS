@@ -64,7 +64,7 @@ function App() {
             <Route path='question-answer/' element={<StudentQA/>} /> 
             <Route path='qa-deatails/' element={<StudentQADetail/>} /> 
             <Route path='lecture-details/' element={<StudentCourseLectureDetail/>} /> 
-            <Route path='quiz/' element={<StudentQuiz/>} />
+            <Route path='quiz/:chapterid' element={<StudentQuiz/>} />
           </Route>
         </Routes> 
       </MainWrapper> 
