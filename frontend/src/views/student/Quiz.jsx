@@ -71,17 +71,25 @@ function Quizpage() {
   }; 
   
   useEffect(() =>{ 
+    if (index!==quizid.length){
     let interval ;     
 
     if(time > 0){
      interval = setInterval(() => {
         setTime(prevTime => prevTime - 1);
       }, 1000);
-    } else if(time === 0){ 
+     }
+     else if(time === 0){ 
       handleSubmit(); 
+
+    } 
+    else if(time === 0 && index===quizid.length-1){ 
+      handleSubmit(); 
+      setIndex(quizid.length);
+      
     } 
       return () => clearInterval(interval);
-    }, [time]);
+}}, [time]);
 
 
   const handleSubmit = async (e) => {
@@ -116,6 +124,7 @@ function Quizpage() {
           setTime(10);
         } else if (index === quizid.length - 1){ 
           handleFinalSubmit(); 
+          setIndex(quizid.length);
         } 
       } else {
         console.error('Error evaluating quiz:', response);
@@ -128,12 +137,15 @@ function Quizpage() {
 
   const handleFinalSubmit = async () => {
     const formData = new FormData();
-    formData.append('chapter_id', param.chapterid);
+    formData.append('chapter_id', param.chapterid); 
+    
     try {
+      console.log('hello try')
       const response = await useAxios().post("user/subject/quiz/evaluate_progress/", formData);
       if (response.status === 201) {
         setIsQuizCompleted(true);
         setPercentage(response.data.progress)
+        
       } else {
         console.error('Error submitting final progress:', response);
       }

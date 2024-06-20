@@ -24,7 +24,11 @@ function CourseDetail() {
 
   const [ConversationShow, setConversationShow] = useState(false);
   const handleConversationClose = () => setConversationShow(false);
-  const handleConversationShow = () => { setConversationShow(true); }
+  const handleConversationShow = () => { setConversationShow(true); } 
+   
+  const [addQuestionShow, setAddQuestionShow] = useState(false);
+  const handleQuestionClose = () => setAddQuestionShow(false);
+  const handleQuestionShow = () => setAddQuestionShow(true);
 
   const [chapter,setChapter]=useState([])
   const [error, setError] = useState(null);
@@ -64,17 +68,17 @@ function CourseDetail() {
                      <div className="pb-0">
                         <ul className="d-flex justify-content-center align-items-center" id="course-pills-tab" role="tablist">
                             <li className="me-2 me-sm-4">
-                              <button className="btn border-0 text-secondary fw-bold active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
+                              <button className="btn border-0 text-secondary  fw-bold active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
                                LESSION
                               </button>
                             </li>
                             <li className="me-2 me-sm-4">
-                              <button className="btn border-0 text-secondary fw-bold"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
+                              <button className="btn border-0 text-secondary  fw-bold"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
                                 NOTES
                               </button>
                             </li>
                             <li className="me-2 me-sm-4">
-                              <button className="btn border-0 text-secondary fw-bold" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
+                              <button className="btn border-0 text-secondary  fw-bold" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
                                 DISCUSSION
                               </button>
                             </li>
@@ -205,7 +209,7 @@ function CourseDetail() {
                                       </div>
                                     </div>
                                     <div className="col-sm-6 col-lg-3">
-                                      <a href="#" className="btn btn-primary mb-0 w-100" data-bs-toggle="modal" data-bs-target="#modalCreatePost">
+                                       <a onClick={handleQuestionShow} className="btn btn-primary mb-0 w-100" data-bs-toggle="modal" data-bs-target="#modalCreatePost">
                                         Ask Question
                                       </a>
                                     </div>
@@ -235,54 +239,10 @@ function CourseDetail() {
                                       <h5>How can i fix this bug?</h5>
                                       <button className='btn btn-primary btn-sm mb-3 mt-3' onClick={handleConversationShow}>Join Conversation <i className='fas fa-arrow-right'></i></button>
                                     </div>
-
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            {/* <div
-                              className="tab-pane fade"
-                              id="course-pills-4"
-                              role="tabpanel"
-                              aria-labelledby="course-pills-tab-4"
-                            >
-                              <div className="card">
-                                <div className="card-header border-bottom p-0 pb-3">
-                                  <h4 className="mb-3 p-3">Leave a Review</h4>
-                                  <div className="mt-2">
-                                    <form className="row g-3 p-3">
-
-                                      <div className="col-12 bg-light-input">
-                                        <select
-                                          id="inputState2"
-                                          className="form-select js-choice"
-                                        >
-                                          <option value={1}>★☆☆☆☆ (1/5)</option>
-                                          <option value={2}>★★☆☆☆ (2/5)</option>
-                                          <option value={3}>★★★☆☆ (3/5)</option>
-                                          <option value={4}>★★★★☆ (4/5)</option>
-                                          <option value={5}>★★★★★ (5/5)</option>
-                                        </select>
-                                      </div>
-                                      <div className="col-12 bg-light-input">
-                                        <textarea
-                                          className="form-control"
-                                          id="exampleFormControlTextarea1"
-                                          placeholder="Your review"
-                                          rows={3}
-                                          defaultValue={""}
-                                        />
-                                      </div>
-                                      <div className="col-12">
-                                        <button type="submit" className="btn btn-primary mb-0">
-                                          Post Review
-                                        </button>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
-                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -297,7 +257,9 @@ function CourseDetail() {
           <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"}/>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success">Download</Button>
+        <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -316,14 +278,14 @@ function CourseDetail() {
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">Note Content</label>
               <textarea onChange={null} defaultValue={null} name='note' className='form-control' cols="30" rows="10"></textarea>
-            </div>
+            </div> 
             <button type="button" className="btn btn-secondary me-2" onClick={null}><i className='fas fa-arrow-left'></i> Close</button>
             <button type="submit" className="btn btn-primary">Save Note <i className='fas fa-check-circle'></i></button>
           </form>
         </Modal.Body>
       </Modal>
 
-      {/* Note Edit Modal */}
+      {/* Discussion Edit Modal */}
       <Modal show={ConversationShow} size='lg' onHide={handleConversationClose}>
         <Modal.Header closeButton>
           <Modal.Title>Lesson: 123</Modal.Title>
@@ -339,7 +301,6 @@ function CourseDetail() {
                     </a>
                   </div>
                   <div className="ms-2">
-                    {/* Comment by */}
                     <div className="bg-light p-3 rounded w-100">
                       <div className="d-flex w-100 justify-content-center">
                         <div className="me-2 ">
@@ -365,7 +326,6 @@ function CourseDetail() {
                     </a>
                   </div>
                   <div className="ms-2">
-                    {/* Comment by */}
                     <div className="bg-light p-3 rounded w-100">
                       <div className="d-flex w-100 justify-content-center">
                         <div className="me-2 ">
@@ -391,7 +351,6 @@ function CourseDetail() {
                     </a>
                   </div>
                   <div className="ms-2">
-                    {/* Comment by */}
                     <div className="bg-light p-3 rounded w-100">
                       <div className="d-flex w-100 justify-content-center">
                         <div className="me-2 ">
@@ -417,7 +376,6 @@ function CourseDetail() {
                     </a>
                   </div>
                   <div className="ms-2">
-                    {/* Comment by */}
                     <div className="bg-light p-3 rounded w-100">
                       <div className="d-flex w-100 justify-content-center">
                         <div className="me-2 ">
@@ -435,21 +393,62 @@ function CourseDetail() {
                 </div>
               </li>
             </ul>
-
-            <form class="w-100 d-flex">
-              <textarea name='message' class="one form-control pe-4 bg-light w-75" id="autoheighttextarea" rows="2" placeholder="What's your question?"></textarea>
-              <button class="btn btn-primary ms-2 mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i></button>
-            </form>
-
             <form class="w-100">
-              <input name='title' type="text" className="form-control mb-2" placeholder='Question Title' />
               <textarea name='message' class="one form-control pe-4 mb-2 bg-light" id="autoheighttextarea" rows="5" placeholder="What's your question?"></textarea>
               <button class="btn btn-primary mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i></button>
             </form>
 
           </div>
         </Modal.Body>
-      </Modal>  
+      </Modal>   
+       
+       {/* Ask Question Modal */}
+      {/* Note Edit Modal */}
+      <Modal show={addQuestionShow} size="lg" onHide={handleQuestionClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Ask Question</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form > 
+          {/* onSubmit={handleSaveQuestion} */}
+            <div className="mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Question Title
+              </label>
+              <input
+                // value={createMessage.title}
+                name="title"
+                // onChange={handleMessageChange}
+                type="text"
+                className="form-control"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
+                Question Message
+              </label>
+              <textarea
+                // value={createMessage.message}
+                name="message"
+                // onChange={handleMessageChange}
+                className="form-control"
+                cols="30"
+                rows="10"
+              ></textarea>
+            </div>
+            <button
+              type="button"
+              className="btn btn-secondary me-2"
+              onClick={handleQuestionClose}
+            >
+              <i className="fas fa-arrow-left"></i> Close
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Send Message <i className="fas fa-check-circle"></i>
+            </button>
+          </form>
+        </Modal.Body>
+      </Modal>
     </section>
     </>
   )

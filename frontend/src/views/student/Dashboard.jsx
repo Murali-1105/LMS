@@ -1,6 +1,7 @@
 import React, { useEffect, useState ,useRef} from "react";
 import { Link } from "react-router-dom"; 
-import useAxios from "../../utils/useAxios";
+import useAxios from "../../utils/useAxios"; 
+import UserData from "../plugin/UserData";
 
 import "./Css/Dashboard.css";
 import Swiper from 'swiper'; 
@@ -28,40 +29,38 @@ function Dashboard() {
   const [subjectTitle, setSubjectTitle] = useState([]); 
   const [subjectProgress, setSubjectProgress] = useState([]); 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(false);  
   const [hasAnimated, setHasAnimated] = useState(false); 
    
   useEffect(() => {
-    setHasAnimated(true);
+    setHasAnimated(true); 
+    fetchSubjects();
   }, []);
 
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      try {
-        const response = await useAxios().get("/user/subject");
-        if (response.data && Array.isArray(response.data.subjects)) {
-          setSubjects(response.data.subjects);
-          
-          const subjectTitlelocal = response.data.subjects.map(subject => subject.title);
-          const subjectProgresslocal = response.data.subjects.map(subject => subject.progress);
+  
+  const fetchSubjects = async () => {  
+    setLoading(true);
+    try {
+      const response = await useAxios().get("/user/subject");
+      if (response.data && Array.isArray(response.data.subjects)) {
+        setSubjects(response.data.subjects);
+        
+        const subjectTitlelocal = response.data.subjects.map(subject => subject.title);
+        const subjectProgresslocal = response.data.subjects.map(subject => subject.progress);
 
-          setSubjectTitle(subjectTitlelocal);
-          setSubjectProgress(subjectProgresslocal);
-        } else {
-          setSubjects([]);
-          setError(new Error("Invalid data format"));
-        }
-      } catch (error) {
-        console.error("Error fetching subjects:", error);
-        setError(error);
-      } finally {
-        setLoading(false); 
-      }  
-    }
-
-    fetchSubjects();
-  }, []); 
-
+        setSubjectTitle(subjectTitlelocal);
+        setSubjectProgress(subjectProgresslocal);
+      } else {
+        setSubjects([]);
+        setError(new Error("Invalid data format"));
+      }
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+      setError(error);
+    } finally {
+      setLoading(false); 
+    }  
+  }
     
   const swiperRef = useRef(null);
 
