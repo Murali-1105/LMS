@@ -1,7 +1,6 @@
 import React, { useEffect, useState ,useRef} from "react";
 import { Link } from "react-router-dom"; 
 import useAxios from "../../utils/useAxios"; 
-import UserData from "../plugin/UserData";
 
 import "./Css/Dashboard.css";
 import Swiper from 'swiper'; 
@@ -92,7 +91,8 @@ function Dashboard() {
         },
       }); 
     }
-  }, []);
+  }, []); 
+   
     
   const options = {
     responsive: true,  
@@ -110,7 +110,7 @@ function Dashboard() {
     },  
     
     scales: {
-      x: {
+      x: { 
         grid: {
           color: 'rgba(0, 0, 0, 0.1)',
         },
@@ -121,7 +121,7 @@ function Dashboard() {
           },
         },
       },
-      y: { 
+      y: {  
         beginAtZero: true,
         min: 0,
         max: 100,
@@ -139,23 +139,27 @@ function Dashboard() {
         borderRadius: 3,
         borderWidth: 0.7,
       },
+    },   
+    animation: {
+      duration: 500,
+      easing: 'linear', 
     }, 
-  }; 
    
-  const labels = subjectTitle 
+  };  
+   
    
   const data = {
-    labels,
+    labels: subjectTitle,
     datasets: [ 
       { 
         label: 'Total Progress',
         data: subjectProgress,
-        backgroundColor: 'rgba(0, 123, 255, 0.8)', 
+        backgroundColor: 'rgba(0, 123, 255, 0.8)',  
       },
       {
         label: 'Quiz Mark',
         data: [11,18,29,30,50],
-        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+        backgroundColor: 'rgba(220, 53, 69, 0.8)', 
       }, 
     ],
   }; 
@@ -239,11 +243,11 @@ function Dashboard() {
                 </div>  
              </div>   
              <h4 className="my-4"><i class="bi bi-book-half pe-2"></i>My Subjects</h4> 
-             <div className="d-flex aligan-items-center justify-content-center">
-              <div>
-                {loading && <p><i className="fas fa-spinner fa-spin"></i></p>}
-                {error && <p>Error: {error.message}</p>} 
+              <div className='d-flex justify-content-center align-items-center'> 
+                 {loading && <p style={{marginTop: '100px'}}><i className="fas fa-spinner fa-spin"></i></p>}
+                 {error && <p style={{marginTop: '100px'}}>Error: {error.message}</p>} 
               </div> 
+             <div className="d-flex aligan-items-center justify-content-center">
               <div className="card-container swiper " >  
                 <div className="card-content" ref={swiperRef}>
                  <div className="swiper-wrapper">
@@ -253,7 +257,7 @@ function Dashboard() {
                               <div className="card-body">
                                   <h3 className="card-title fs-6">{subject.title}</h3>
                                      <div className="mt-5">
-                                         <div className="progress" style={{height: '8px' , marginBottom:'5px'}}>
+                                         <div className="progress" style={{height: '5px' , marginBottom:'5px'}}>
                                             <div
                                                className={`progress-bar ${hasAnimated ? 'animate' : ''}`}
                                                role="progressbar"

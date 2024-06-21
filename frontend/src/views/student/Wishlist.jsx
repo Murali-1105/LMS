@@ -1,110 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; 
+import useAxios from "../../utils/useAxios"; 
 
-function Wishlist() {
-    const [isLoading, setIsLoading] = useState(true);
+function Wishlist() { 
+    const [subjects, setSubjects] = useState([]); 
+    const [isLoading, setLoading] = useState(true); 
+    const [error, setError] = useState("");
 
     useEffect(() => {
         setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
-    }, []);
-
-    const cardData = [
-        {
-            id: 1,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 1',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        },
-        {
-            id: 2,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 2',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        }, 
-        {
-            id: 3,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 1',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        },
-        {
-            id: 4,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 2',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        }, 
-        {
-            id: 5,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 1',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        },
-        {
-            id: 6,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 2',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        }, 
-        {
-            id: 7,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 1',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        },
-        {
-            id: 8,
-            imgSrc: '/public/Login-page.jpg',
-            title: 'Card Title 2',
-            text: 'Some quick example text to build on the card title and make up the bulk of the card\'s content.',
-            link: '#'
-        },
-    ];
+            setLoading(false); 
+            fetchSubjects();
+        }, 500) 
+    },[]); 
+     
+    const fetchSubjects = async () => {
+        try {
+            const response = await useAxios().get("/user/subject");
+            if (response.data && Array.isArray(response.data.subjects)) {
+                setSubjects(response.data.subjects);
+            } else {
+                setError("Invalid data format");
+            }
+        } catch (error) {
+            console.error("Error fetching subjects:", error);
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }; 
+     
 
     return (
         <section className='px-2 px-lg-5 py-2'>
             <div className='container-fluid'>
-                <h4 className="my-4 text-center"><i className="bi bi-book-half"></i> My Subjects </h4>
+                <h4 className="mt-4 mb-5 text-center"><i className="bi bi-book-half me-2"></i> My Subjects </h4> 
+                {error && <div className="alert alert-danger">{error}</div>}
                 <div className='row'>
-                    {cardData.map(card => (
-                        <div key={card.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
-                            {isLoading ? (
+                    {isLoading ? (
+                        Array.from({  length: subjects.length || 8 }).map((_, index) => (
+                            <div key={index} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
                                 <div className="card" aria-hidden="true"> 
-                                    <div className='card-img-top p-5 text-center' alt="Card placeholder" ><i className="fas fa-spinner fa-spin"></i></div>
+                                    <div className='card-img-top placeholder' alt="Card"  style={{ height: '170px' }}></div>
                                     <div className="card-body">
                                         <h5 className="card-title placeholder-glow">
-                                            <span className="placeholder col-6"></span>
-                                        </h5>
-                                        <p className="card-text placeholder-glow">
-                                            <span className="placeholder col-7"></span>
-                                            <span className="placeholder col-4"></span>
-                                            <span className="placeholder col-4"></span>
-                                            <span className="placeholder col-6"></span>
                                             <span className="placeholder col-8"></span>
+                                        </h5>
+                                        <p className="card-text placeholder-glow my-4">
+                                            <span className="placeholder col-12 placeholder-xs"></span>
+                                            <span className="placeholder col-2"></span>
                                         </p>
-                                        <button className="btn btn-primary disabled placeholder col-6" aria-disabled="true"></button>
+                                        <button className="btn btn-primary disabled placeholder col-12" aria-disabled="true"></button>
                                     </div>
                                 </div>
-                            ) : (
+                            </div>
+                        ))
+                    ) : (
+                        subjects.map(subject => (
+                            <div key={subject.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
                                 <div className="card">
-                                    <img src={card.imgSrc} className="card-img-top" alt="Card" />
+                                    <img src={subject.img} alt="avatar" className="img-fluid card-img-top" style={{ height: '170px', objectFit: 'cover' }}/>
                                     <div className="card-body">
-                                        <h5 className="card-title">{card.title}</h5>
-                                        <p className="card-text">{card.text}</p>
-                                        <Link to={card.link} className="btn btn-primary btn-sm w-100">Go somewhere</Link>
+                                        <h3 className="card-title fs-6" style={{ height: '30px' }}>{subject.title}</h3>
+                                        <div className="mt-5">
+                                            <div className="progress" style={{ height: '5px', marginBottom:'5px' }}>
+                                                <div
+                                                    className='progress-bar'
+                                                    role="progressbar"
+                                                    style={{ width: `${subject.progress}%` }}
+                                                    aria-valuenow={subject.progress}
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"> 
+                                                </div> 
+                                            </div> 
+                                            {subject.progress}%
+                                        </div>
+                                        <Link className="btn btn-primary mt-3 w-100" to={`/student/course-detail/${subject.id}/${subject.progress}`}>  
+                                            {subject.buttontext} continue 
+                                        </Link>
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    ))}
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </section>

@@ -32,11 +32,12 @@ function CourseDetail() {
 
   const [chapter,setChapter]=useState([])
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(false); 
   const param=useParams()
 
 
-  const fetchChapters = async () => {
+  const fetchChapters = async () => { 
+    setLoading(true);
     try {
       const response = await useAxios().get(`/user/subject/${param.id}`);
       if (response.data && Array.isArray(response.data)) {
@@ -45,7 +46,6 @@ function CourseDetail() {
         console.log(response.data)
       } else {
         setChapter([]);
-        
         setError(new Error("Invalid data format"));
       }
     } catch (error) {
@@ -84,16 +84,19 @@ function CourseDetail() {
                             </li>
                         </ul> 
                      </div> 
-
                  <div className="px-sm-4 pt-sm-0">
                   <div className="tab-content" id="course-pills-tabContent">
                     <div className="tab-pane fade show active"  id="course-pills-1"  role="tabpanel"  aria-labelledby="course-pills-tab-1" > 
                         <div className="accordion accordion-icon accordion-border" id="accordionExample2">
                            <div className="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow={param.progress} aria-valuemin="0" aria-valuemax="100">
-                             <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: `${param.progress}%` }}> 
+                             <div className="progress-bar placeholder-wave" style={{ width: `${param.progress}%` }}> 
                                {param.progress}%
                              </div>
-                           </div> 
+                           </div>   
+                  <div className='d-flex justify-content-center align-items-center'> 
+                   {loading && <p style={{marginTop: '150px'}}><i className="fas fa-spinner fa-spin"></i></p>}
+                   {error && <p style={{marginTop: '150px'}}>Error: {error.message}</p>}  
+                 </div>
                    {chapter.map((item, Index) => (
                       <div className="accordion-item mb-2 border border-2 rounded-3">
                         <h6 className="accordion-header"  id="heading-1">
@@ -104,10 +107,10 @@ function CourseDetail() {
                       <div id={`collapse-${Index}`} className="accordion-collapse collapse" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
                        <div className="accordion-body px-4 px-md-5">
                          {item.items.map((value, itemIndex) => (
-                          <div className="d-flex justify-content-between align-items-center my-2" key={`item-${itemIndex}`}>  
+                          <div className="d-flex justify-content-between align-items-center my-4 my-sm-3 my-lg-2" key={`item-${itemIndex}`}>  
                            <div className="position-relative d-flex align-items-center justify-content-center">  
                               <div style={{transform: "rotate(90deg)"}} className='me-3'><i class="bi bi-airplane-fill"></i></div>  
-                              <span className="fs-6 text-base ">{value.description}</span> 
+                              <span className="fs-6 text-baseline">{value.description}</span> 
                           </div> 
                           <div className="d-flex justify-content-center align-items-center ms-2 ms-md-4 ms-lg-5">  
                             <a  className="" onClick={()=> handleShow(value)}><i class="bi bi-play-circle fs-4"></i></a>
@@ -249,18 +252,16 @@ function CourseDetail() {
                     </div>
 
       {/* Lecture Modal */}
-      <Modal show={show} size='lg' onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title> <h5 className='fs-6'>{chapterItem.description}</h5></Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='px-3'>
-          <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"}/>
+      <Modal show={show} size='lg' onHide={handleClose} centered> 
+          <div> 
+            <button className="btn btn-danger rounded-0 float-end" onClick={handleClose}><i className="bi bi-x-lg fw-bolder"></i></button>  
+            <h5 className='fs-6 text-center mt-3'>{chapterItem.description}</h5> 
+          </div> 
+        <Modal.Body> 
+          <div className='py-3'>
+          <ReactPlayer url={chapterItem.video}  controls controlsList="nodownload"  playing width={"100%"} height={"100%"}/> 
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
 
 

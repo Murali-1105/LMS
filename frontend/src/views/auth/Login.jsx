@@ -85,13 +85,13 @@ function Login() {
                       </div>
                     </div>
                     <div>
-                      <Link to="/forgot-password/">Forgot password?</Link>
+                      <Link to="/forgot-password/" className='link-dark'>Forgot password?</Link>
                     </div>
                   </div>
                   <div>
                     <div className="d-grid">
                     <button type="submit" className="btn btn-primary" disabled={isLoading}>
-                         {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Log in'}
+                         {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Sign in'}
                     </button>
                     </div> 
                     <div className='text-center mt-4'> 
