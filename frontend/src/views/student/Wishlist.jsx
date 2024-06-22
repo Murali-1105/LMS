@@ -32,7 +32,7 @@ function Wishlist() {
      
 
     return (
-        <section className='px-2 px-lg-5 py-2'>
+        <section className='section px-2 px-lg-5 py-4'>
             <div className='container-fluid'>
                 <h4 className="mt-4 mb-5 text-center"><i className="bi bi-book-half me-2"></i> My Subjects </h4> 
                 {error && <div className="alert alert-danger">{error}</div>}
@@ -40,8 +40,8 @@ function Wishlist() {
                     {isLoading ? (
                         Array.from({  length: subjects.length || 8 }).map((_, index) => (
                             <div key={index} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
-                                <div className="card" aria-hidden="true"> 
-                                    <div className='card-img-top placeholder' alt="Card"  style={{ height: '170px' }}></div>
+                                <div className="card rounded-4" aria-hidden="true"> 
+                                    <div className='card-img-top placeholder rounded-top-4' alt="Card"  style={{ height: '170px' }}></div>
                                     <div className="card-body">
                                         <h5 className="card-title placeholder-glow">
                                             <span className="placeholder col-8"></span>
@@ -58,8 +58,8 @@ function Wishlist() {
                     ) : (
                         subjects.map(subject => (
                             <div key={subject.id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
-                                <div className="card">
-                                    <img src={subject.img} alt="avatar" className="img-fluid card-img-top" style={{ height: '170px', objectFit: 'cover' }}/>
+                                <div className="card rounded-4">
+                                    <img src={subject.img} alt="avatar" className="img-fluid card-img-top rounded-top-4" style={{ height: '200px', objectFit: 'cover' }}/>
                                     <div className="card-body">
                                         <h3 className="card-title fs-6" style={{ height: '30px' }}>{subject.title}</h3>
                                         <div className="mt-5">

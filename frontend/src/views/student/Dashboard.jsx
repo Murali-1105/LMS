@@ -81,13 +81,23 @@ function Dashboard() {
           prevEl: ".swiper-button-prev",
         }, 
 
-        breakpoints: {
+        breakpoints: { 
+          0: {
+            slidesPerView: 1,
+            touchRatio: 1,
+          },
           600: {
-            slidesPerView: 2,
+            slidesPerView: 2, 
+            touchRatio: 0,
           },
           968: {
-            slidesPerView: 3,
+            slidesPerView: 3, 
+            touchRatio: 0,
           },  
+          1200:{ 
+            slidesPerView: 4, 
+            touchRatio: 0,
+          } 
         },
       }); 
     }
@@ -166,11 +176,11 @@ function Dashboard() {
     
  return ( 
      <>   
-      <section className="section px-2 px-lg-5 py-2">
+      <section className="section px-2 px-lg-5 py-4">
        <div class="container-fluid"> 
           <h4 className="my-4"><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
           <div class="row">  
-               <div className="d-none d-lg-block col-12 col-xl-8 mb-4 "> 
+               <div className="d-none d-lg-block col-12 col-xl-8"> 
                    <div class="card border-0 shadow-sm w-100 h-100">  
                       <div className="card-body d-flex align-items-center justify-content-center">
                         <Bar options={options} data={data}/> 
@@ -248,14 +258,14 @@ function Dashboard() {
                  {error && <p style={{marginTop: '100px'}}>Error: {error.message}</p>} 
               </div> 
              <div className="d-flex aligan-items-center justify-content-center">
-              <div className="card-container swiper " >  
+              <div className="card-container swiper">  
                 <div className="card-content" ref={swiperRef}>
                  <div className="swiper-wrapper">
                           {subjects.map((subject) => (
                             <div key={subject.id} className="card card-box swiper-slide">
-                                <img src={subject.img} alt="avatar" className="img-fluid card-img-top w-100 h-100"/>
+                                <img src={subject.img} alt="avatar" className="img-fluid card-img-top" style={{ height: '200px', objectFit: 'cover' }}/>
                               <div className="card-body">
-                                  <h3 className="card-title fs-6">{subject.title}</h3>
+                                  <h3 className="card-title fs-6" style={{ height: '30px' }}>{subject.title}</h3>
                                      <div className="mt-5">
                                          <div className="progress" style={{height: '5px' , marginBottom:'5px'}}>
                                             <div

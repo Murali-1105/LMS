@@ -69,8 +69,8 @@ function Login() {
                       Please enter valid password.
                     </div>
                   </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="form-check">
+                  <div className="d-flex justify-content-end align-items-center mb-3">
+                 {/*    <div className="form-check">
                       <input
                         type="checkbox"
                         className="form-check-input"
@@ -79,11 +79,11 @@ function Login() {
                       />
                       <label className="form-check-label" htmlFor="rememberme">
                         Remember me
-                      </label>
+                      </label> 
                       <div className="invalid-feedback">
                         You must agree before submitting.
                       </div>
-                    </div>
+                    </div>*/}
                     <div>
                       <Link to="/forgot-password/" className='link-dark'>Forgot password?</Link>
                     </div>

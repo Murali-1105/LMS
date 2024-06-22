@@ -52,8 +52,9 @@ const Profile = () => {
     };
     
 
-    return (
-        <div className="container-fluid my-4 px-2 px-sm-4 px-xxl-5">
+    return ( 
+    <section className="section px-2 px-lg-5 py-4">
+        <div className="container-fluid">
             <div className="card shadow-lg py-3 px-2 px-lg-5">
                 <div className="row card-body media d-flex align-items-center justify-content-between mb-4">  
                   <div className='col'><h1 className='fw-bold fs-3'>Welcome ,back <br/><span className='text-success'>{formData.username}!</span></h1></div>  
@@ -194,7 +195,8 @@ const Profile = () => {
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
+     </section>
     );
 };
 

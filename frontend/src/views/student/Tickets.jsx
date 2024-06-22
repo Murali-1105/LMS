@@ -144,7 +144,7 @@ const Ticket = () => {
               </div>
             </form>
           </Modal.Body>
-        </Modal>
+        </Modal> 
       </section>
     </>
   );

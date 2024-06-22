@@ -33,7 +33,7 @@ function Header({ toggleSidebar }) {
     }, [isLight]); 
 
     return (
-        <nav className="navbar navbar-expand px-3 border-bottom shadow">
+        <nav className="navbar navbar-expand px-3 border-bottom shadow-sm">
         <button className="btn" id="sidebar-toggle" type="button" onClick={toggleSidebar}>
             <span className="navbar-toggler-icon"></span>
         </button> 
@@ -53,7 +53,7 @@ function Header({ toggleSidebar }) {
                           <span class="visually-hidden">New alerts</span>
                        </span> 
                     </Link>
-                </li>
+                </li>  
                <li className='nav-notify dropdown me-4 position-relative'>  
                     <div className="cursor-pointer navbar-link " data-bs-toggle="dropdown" aria-expanded="false"> 
                       <a href="" className='position-relative'><i className="bi bi-bell fs-5"></i>
@@ -93,7 +93,7 @@ function Header({ toggleSidebar }) {
                 </li>
             </ul>
         </div>
-    </nav>
+    </nav> 
     );
 }
 

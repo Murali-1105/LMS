@@ -169,7 +169,7 @@ function Quizpage() {
   }
 
   return ( 
-   <section className="section px-2 px-lg-5 py-2">
+   <section className="section px-2 px-lg-5 py-4">
     <div className="container-fluid">
       {isQuizCompleted ? (
         <>

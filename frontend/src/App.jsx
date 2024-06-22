@@ -17,7 +17,7 @@ import Success from "./views/base/Success";
 import Search from "./views/base/Search";
  
 //Student Pages 
-import StudentLayout from './views/student/StudentLayout';
+import StudentLayout from './views/student/layout/StudentLayout';
 import StudentDashboard from './views/student/Dashboard' 
 import StudentChangePassword from './views/student/ChangePassword' 
 import StudentCourseDetail from './views/student/CourseDetail' 
@@ -29,9 +29,7 @@ import StudentTicket from './views/student/Tickets'
 import StudentQADetail from './views/student/QADetail' 
 import StudentCourseLectureDetail from './views/student/StudentCourseLectureDetail' 
 import StudentWishlist from './views/student/Wishlist' 
- 
-
-import 'bootstrap/dist/css/bootstrap.min.css';    
+  
 
 function App() {
   return (

@@ -19,18 +19,22 @@ function Sidebar({ collapsed, closeSidebar }) {
                         <i class="bi bi-book-half pe-2"></i>MySubjects</Link>
                     </li> 
                     <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/`}>
-                        <i class="bi bi-question-circle-fill pe-2"></i>Q/A</Link>
-                    </li> 
-                    <li class="sidebar-item">
                         <Link class="sidebar-link" to={`/student//`}>
-                        <i class="bi bi-list-task pe-2"></i>Task</Link>
+                        <i class="bi bi-list-task pe-2"></i>Daily Task</Link>
                     </li>  
                     <li class="sidebar-item">
                         <Link class="sidebar-link" to={`/student/`}>
-                        <i class="bi bi-clock-history pe-2"></i>History</Link>
+                        <i class="bi bi-calendar-week pe-2"></i>Calender</Link>
+                    </li>  
+                    <li class="sidebar-item">
+                        <Link class="sidebar-link" to={`/student/`}>
+                        <i class="bi bi-question-circle-fill pe-2"></i>Interview Question</Link>
+                    </li>  
+                    <li class="sidebar-item">
+                        <Link class="sidebar-link" to={`/student/`}>
+                        <i class="bi bi-trophy pe-2"></i>Leadership Board</Link>
                     </li> 
-                </ul>
+                </ul> 
         </aside> 
     );
 }

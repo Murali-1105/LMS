@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom'; 
-import Sidebar from "./Partials/Sidebar";
-import Header from "./Partials/Header";
+import Sidebar from "../Partials/Sidebar";
+import Header from "../Partials/Header";
 
 const StudentLayout = () => {    
 
@@ -19,11 +19,11 @@ const StudentLayout = () => {
     <> 
       <div className='warpper d-flex'>
          <Sidebar collapsed={collapsed} closeSidebar={closeSidebar}/>
-         <div className="main-container">
+         <div className="inner-warpper">
              <Header toggleSidebar={toggleSidebar}  /> 
-             <section className='content '>  
+             <main className='content '>  
                <Outlet /> 
-             </section>  
+             </main>  
          </div> 
       </div>
     </>
