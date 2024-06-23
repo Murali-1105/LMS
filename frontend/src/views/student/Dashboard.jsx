@@ -101,10 +101,12 @@ function Dashboard() {
         },
       }); 
     }
-  }, []); 
+  }, []);  
    
     
-  const options = {
+  const options = {  
+    maintainAspectRatio: false, 
+    legend: {display: false},
     responsive: true,  
     plugins: {
       legend: { 
@@ -118,11 +120,11 @@ function Dashboard() {
         }
       },  
     },  
-    
-    scales: {
+     
+    scales: { 
       x: { 
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          display: false,
         },
         ticks: {
           fontColor: '#333',  
@@ -131,32 +133,33 @@ function Dashboard() {
           },
         },
       },
-      y: {  
-        beginAtZero: true,
+      y: {   
+        beginAtZero: true, 
         min: 0,
         max: 100,
         ticks: {
-          stepSize: 10, 
+          stepSize: 20, 
           fontColor: '#333',  
         },
-        grid: {
+        grid: { 
+          display: true,
           color: 'rgba(0, 0, 0, 0.1)',
         },
       },
     },
     elements: {
       bar: {
-        borderRadius: 3,
+        borderRadius: 2,
         borderWidth: 0.7,
       },
     },   
     animation: {
-      duration: 500,
+      duration: 800,
       easing: 'linear', 
     }, 
    
   };  
-   
+    
    
   const data = {
     labels: subjectTitle,
@@ -164,12 +167,15 @@ function Dashboard() {
       { 
         label: 'Total Progress',
         data: subjectProgress,
-        backgroundColor: 'rgba(0, 123, 255, 0.8)',  
+        backgroundColor: 'rgba(0, 123, 255, 0.9)',  
+        borderWidth: 2,  
+
       },
       {
-        label: 'Quiz Mark',
+        label: 'Quiz Mark', 
         data: [11,18,29,30,50],
-        backgroundColor: 'rgba(220, 53, 69, 0.8)', 
+        backgroundColor: 'rgba(220, 53, 69, 0.9)',  
+        borderWidth: 2, 
       }, 
     ],
   }; 
@@ -181,9 +187,9 @@ function Dashboard() {
           <h4 className="my-4"><i class="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
           <div class="row">  
                <div className="d-none d-lg-block col-12 col-xl-8"> 
-                   <div class="card border-0 shadow-sm w-100 h-100">  
-                      <div className="card-body d-flex align-items-center justify-content-center">
-                        <Bar options={options} data={data}/> 
+                   <div class="card border-0 shadow-sm">  
+                      <div className="card-body">
+                        <Bar options={options} data={data} style={{width:"100%", maxWidth:"1200px" , height:'280px'}} /> 
                       </div>
                    </div>
                 </div> 
@@ -215,7 +221,7 @@ function Dashboard() {
                                              0
                                          </h4>
                                          <p class="mb-2">
-                                             Total Course
+                                             Total Subjects
                                          </p>
                                          <div class="mb-0">
                                              <span class="text-muted">
@@ -228,7 +234,7 @@ function Dashboard() {
                              </div>
                          </div> 
                      </div>  
-                     <div class="col-12 col-sm-6 col-xl-12  d-flex">
+                     {/* <div class="col-12 col-sm-6 col-xl-12  d-flex">
                          <div class="card flex-fill border-0 shadow-sm">
                              <div class="card-body py-4">
                                  <div class="d-flex align-items-start">
@@ -248,7 +254,7 @@ function Dashboard() {
                                  </div>
                              </div>
                          </div>  
-                       </div>
+                       </div> */}
                    </div> 
                 </div>  
              </div>   

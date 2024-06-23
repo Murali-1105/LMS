@@ -85,6 +85,19 @@ class ChapterQuizSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=ChapterQuiz
+        fields='__all__'        
+
+
+class SubjectQuestionSerializer(ModelSerializer):
+    
+    class Meta:
+        model=SubjectQuestion
+        fields=['subject','title','id']
+        
+        
+class QuestionAnswerSerializer(ModelSerializer):
+    class Meta:
+        model=QuestionAnswers
         fields='__all__'
         
     

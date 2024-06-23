@@ -1,40 +1,67 @@
-import React, { useState ,useEffect } from 'react' 
+import React, { useState ,useEffect ,useRef } from 'react' 
 import { Link } from "react-router-dom";  
 import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player' 
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'; 
+import Modal from 'react-bootstrap/Modal';  
+import "./Css/SubjectDetail.css" 
+import moment from 'moment'; 
+import UserData from '../../views/plugin/UserData.js';
  
 
-import useAxios from '../../utils/useAxios'
+import useAxios from '../../utils/useAxios' 
 
 
-function CourseDetail() { 
+function CourseDetail() {  
+   
+  const user = UserData();
+
+  if (!user) {
+    return <div>No user data available</div>;
+  }
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = (chapteritem) => {setchapterItem(chapteritem);setShow(true)};   
-   
 
   const [chapterItem, setchapterItem] = useState([]); 
+   
+  const [question,setQuestion] = useState("");
+  const [questiontitle,setQuestionTitle]=useState("");
+  const [questionid,setQuestionID]=useState(-1);
+  const [questionsposts,setQuestionPosts] = useState([]); 
+   
+  const [returnquestions,setReturnQuestions] = useState([]);
 
   const [noteShow, setNoteShow] = useState(false);
   const handleNoteClose = () => setNoteShow(false);
   const handleNoteShow = () => { setNoteShow(true); }
 
   const [ConversationShow, setConversationShow] = useState(false);
-  const handleConversationClose = () => setConversationShow(false);
+  const handleConversationClose = () =>  {setConversationShow(false); setQuestionID(-1) }
   const handleConversationShow = () => { setConversationShow(true); } 
    
   const [addQuestionShow, setAddQuestionShow] = useState(false);
   const handleQuestionClose = () => setAddQuestionShow(false);
-  const handleQuestionShow = () => setAddQuestionShow(true);
+  const handleQuestionShow = () => setAddQuestionShow(true); 
+  
+  const [postmessage,setPostMessage] = useState("");
 
   const [chapter,setChapter]=useState([])
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); 
-  const param=useParams()
-
+  const param=useParams();
+   
+  const messagesEndRef = useRef(null);
+ 
+  console.log(postmessage)
+ 
+  const handleAddQuestionSubmit = (e) => {
+    e.preventDefault();  
+    handleSaveQuestion(e);
+    fetchSubjectQuestions(e);
+  }
+ 
 
   const fetchChapters = async () => { 
     setLoading(true);
@@ -54,11 +81,92 @@ function CourseDetail() {
     } finally {
       setLoading(false);
     }
+  }; 
+   
+  const fetchSubjectQuestions =  async () => {
+
+    try{
+      const response = await useAxios().get(`user/subject/get_question/${param.id}`);
+      console.log(response);
+      setReturnQuestions(response.data.questions);  
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  
+
+  const handleSaveQuestion = async (e) => {
+    e.preventDefault()
+    const formdata = new FormData()
+    formdata.append('title',questiontitle);
+    formdata.append('question',question);
+    formdata.append('subject_id',param.id)
+
+    try{
+      const response = useAxios().post(`user/subject/post_question/`,formdata);
+      setAddQuestionShow(false);
+      console.log(response)
+      
+      
+    }
+    catch(error){
+      console.log(error)
+    }
+
+
   };
 
+  const fetchQuestionAnswers= async (question_id) => {
+    try{
+    const response = await useAxios().get(`user/subject/get_question_answer/${question_id}`); 
+    if (response.status === 404){
+      setQuestionPosts([]);
+    }
+    else if (response.status === 200){
+      setQuestionPosts(response.data.answers)
+      console.log(response);
+    }
+    console.log(response);
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  const handlePostMessage =async() => { 
+    const formdataMessage = new FormData(); 
+    formdataMessage.append('question_id',questionid);
+    formdataMessage.append('answer',postmessage); 
+
+    try{
+    const response = await useAxios().post(`user/subject/post_question_answer/`,formdataMessage);
+    console.log(response) 
+    fetchQuestionAnswers(questionid);
+    
+    }
+    catch(error){
+      console.log(error)
+    } 
+     
+    const time = getCurrentTime();
+  }
+
+
   useEffect(() => {
-    fetchChapters();
-  }, []); 
+    fetchChapters(); 
+    fetchSubjectQuestions();
+  }, []);  
+    
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [questionsposts]); 
+
+  const formatTime = (time) => {
+    return moment(time).fromNow();
+  };
 
   return (
     <>
@@ -109,16 +217,16 @@ function CourseDetail() {
                          {item.items.map((value, itemIndex) => (
                           <div className="d-flex justify-content-between align-items-center my-4 my-sm-3 my-lg-2" key={`item-${itemIndex}`}>  
                            <div className="position-relative d-flex align-items-center justify-content-center">  
-                              <div style={{transform: "rotate(90deg)"}} className='me-3'><i class="bi bi-airplane-fill"></i></div>  
+                              <div style={{transform: "rotate(90deg)"}} className='me-3'><i className="bi bi-airplane-fill"></i></div>  
                               <span className="fs-6 text-baseline">{value.description}</span> 
                           </div> 
                           <div className="d-flex justify-content-center align-items-center ms-2 ms-md-4 ms-lg-5">  
-                            <a  className="" onClick={()=> handleShow(value)}><i class="bi bi-play-circle fs-4"></i></a>
-                            <a href={value.ppt} className='ms-3 mx-sm-4'><i class="bi bi-filetype-pdf fs-4"></i></a> 
+                            <a  className="" onClick={()=> handleShow(value)}><i className="bi bi-play-circle fs-4"></i></a>
+                            <a href={value.ppt} className='ms-3 mx-sm-4'><i className="bi bi-filetype-pdf fs-4"></i></a> 
                            </div>
                           </div>))} 
                           <div className='mt-4 d-flex justify-content-center align-items-center'>
-                          <Link to={`/student/quiz/${item.id}`}className='btn btn-secondary btn-sm m-2'>Start Quiz</Link>  
+                          <Link to={`/student/quiz/${item.id}`} className='btn btn-secondary btn-sm m-2' >Start Quiz</Link>  
                          </div>
                        </div>
                     </div>
@@ -197,12 +305,9 @@ function CourseDetail() {
                                   <hr />
                                 </div>
                               </div>
-                            </div> 
-                            
-                            <div className="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
-                              <div className="">
-                                <div className="border-bottom p-0 pb-3">
-                                  <form className="row g-4 p-3">
+                            </div>  
+                             
+                              {/*<form className="row p-3">
                                     <div className="col-sm-6 col-lg-9">
                                       <div className="position-relative">
                                         <input className="form-control pe-5" type="search" placeholder="Search" aria-label="Search" />
@@ -210,39 +315,47 @@ function CourseDetail() {
                                           <i className="fas fa-search fs-6 " />
                                         </button>
                                       </div>
-                                    </div>
-                                    <div className="col-sm-6 col-lg-3">
-                                       <a onClick={handleQuestionShow} className="btn btn-primary mb-0 w-100" data-bs-toggle="modal" data-bs-target="#modalCreatePost">
-                                        Ask Question
+                                    </div>  
+                                  </form>*/}
+                            
+                            <div className="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
+                              <div className="d-block">
+                                <div className="pb-5">
+                                    <div className="float-end">
+                                       <a onClick={handleQuestionShow} className="btn btn-primary mb-0" data-bs-toggle="modal" data-bs-target="#modalCreatePost">
+                                        <i class="bi bi-patch-question-fill pe-2"></i>    
+                                         Ask Question 
                                       </a>
                                     </div>
-                                  </form>
                                 </div>
-                                <div className=" p-0 pt-3">
-                                  <div className="vstack gap-3 p-3">
-                                    <div className="shadow rounded-3 p-3 bg-light">
-                                      <div className="d-sm-flex justify-content-sm-between mb-3">
-                                        <div className="d-flex align-items-center">
-                                          <div className="avatar avatar-sm flex-shrink-0">
-                                            <img
-                                              src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg"
-                                              className="avatar-img rounded-circle"
-                                              alt="avatar"
-                                              style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
-                                            />
+                                <div className="pt-4">   
+                                  {returnquestions.map((question,id)=> (
+                                  <div className="vstack gap-3 p-1"> 
+                                    <div className="card shadow-sm rounded-4 p-1" key={id}> 
+                                      <div className='card-body'>
+                                      <div className="d-flex justify-content-between mb-3">
+                                        <div className="d-flex align-items-center justify-content-center">
+                                          <div className="avatar avatar-sm flex-shrink-0 me-2">
+                                            <img src={user.user_image} className="avatar-img rounded-circle" alt="avatar" style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}/>
                                           </div>
-                                          <div className="ms-4">
-                                            <h6 className="mb-0">
-                                              <a href="#" className='text-decoration-none text-dark'>Angelina Poi</a>
-                                            </h6>
+                                          <div className="ps-4 vstack mt-3">
+                                            <h6 className="fw-bold"><a href="#" className='text-decoration-none text-dark'>{user.username}</a></h6>
                                             <small>Asked 10 Hours ago</small>
                                           </div>
                                         </div>
+                                      </div> 
+                                      <div className='pt-3'>
+                                        <h6>{question?.title}</h6> 
                                       </div>
-                                      <h5>How can i fix this bug?</h5>
-                                      <button className='btn btn-primary btn-sm mb-3 mt-3' onClick={handleConversationShow}>Join Conversation <i className='fas fa-arrow-right'></i></button>
+                                      <button className='btn btn-primary btn-sm my-2' onClick={() => {
+                                          fetchQuestionAnswers(question?.id);
+                                          setQuestionID(question?.id);
+                                          handleConversationShow();
+                                      }} >Join Conversation <i className='fas fa-arrow-right'></i></button>
+                                    </div> 
                                     </div>
                                   </div>
+                                ))}
                                 </div>
                               </div>
                             </div>
@@ -286,140 +399,65 @@ function CourseDetail() {
         </Modal.Body>
       </Modal>
 
+   
       {/* Discussion Edit Modal */}
-      <Modal show={ConversationShow} size='lg' onHide={handleConversationClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Lesson: 123</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="border p-2 p-sm-4 rounded-3">
-            <ul className="list-unstyled mb-0" style={{ overflowY: "scroll", height: "500px" }}>
+      <Modal show={ConversationShow} size='lg' onHide={handleConversationClose} centered> 
+         <div className=''>  
+           <button className="btn btn-danger rounded-0 float-end" onClick={handleConversationClose}><i className="bi bi-x-lg fw-bolder"></i></button> 
+           <h2 className="fs-6 fw-bold mt-3 px-4 text-muted">Discussion</h2> 
+          </div> 
+        <Modal.Body> 
+          <div className="" >
+            <ul className="list-unstyled mx-2 px-3 border rounded shadow-sm" style={{ overflowY: "scroll", height: "500px"}}>
               <li className="comment-item mb-3">
-                <div className="d-flex">
+              {questionsposts.map((post,index) => (
+                <div className="d-flex my-4">
                   <div className="avatar avatar-sm flex-shrink-0">
                     <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
+                      <img className="rounded-circle me-" src={user.user_image} style={{ width: "30px", height: "30px", borderRadius: "50%", objectFit: "cover" }} alt="image" />
                     </a>
                   </div>
-                  <div className="ms-2">
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3">Removed demands expense account
-                          </p>
-                        </div>
+                  <div className="">
+                    <div className="bg-secondary-subtle rounded w-100">
+                      <div className="d-block">
+                          {/* <h6 className="lead"><a href="#!" className='text-decoration-none text-dark fs-6 fw-bold'> Louis Ferguson </a></h6> */}
+                          <div className='py-2 px-3'><small className=''>{post?.answer}</small></div> 
+                          <small className='float-end mt-1' style={{ fontSize: "10px", color: "gray" }}>{formatTime(post?.timestamp)}</small>
                       </div>
                     </div>
-
                   </div>
                 </div>
+                ))} 
+              <div ref={messagesEndRef}/>
               </li>
-
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account from the debby building in a hall  town tak with
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
-
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
-
-              <li className="comment-item mb-3">
-                <div className="d-flex">
-                  <div className="avatar avatar-sm flex-shrink-0">
-                    <a href="#">
-                      <img className="avatar-img rounded-circle" src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} alt="womans image" />
-                    </a>
-                  </div>
-                  <div className="ms-2">
-                    <div className="bg-light p-3 rounded w-100">
-                      <div className="d-flex w-100 justify-content-center">
-                        <div className="me-2 ">
-                          <h6 className="mb-1 lead fw-bold">
-                            <a href="#!" className='text-decoration-none text-dark'> Louis Ferguson </a><br />
-                            <span style={{ fontSize: "12px", color: "gray" }}>5hrs Ago</span>
-                          </h6>
-                          <p className="mb-0 mt-3  ">Removed demands expense account
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <form class="w-100">
-              <textarea name='message' class="one form-control pe-4 mb-2 bg-light" id="autoheighttextarea" rows="5" placeholder="What's your question?"></textarea>
-              <button class="btn btn-primary mb-0 w-25" type="button">Post <i className='fas fa-paper-plane'></i></button>
-            </form>
-
+            </ul> 
+            <div className='d-flex align-items-center border shadow-lg rounded-pill m-2 px-2'> 
+            <img className="rounded-circle" src={user.user_image} style={{ width: "40px", height: "40px", objectFit: "cover" }} alt="image" />
+               <input type="text" name='message' className="one form-control border-0 w-100 m-2" id="autoheighttextarea" placeholder="Type message..." onChange={(e) => {setPostMessage(e.target.value)}}/>
+               <a className="text-primary mx-2" onClick={handlePostMessage}><i className='fas fa-paper-plane fs-5'></i></a>
+           </div>
           </div>
         </Modal.Body>
       </Modal>   
+      
        
        {/* Ask Question Modal */}
       {/* Note Edit Modal */}
-      <Modal show={addQuestionShow} size="lg" onHide={handleQuestionClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Ask Question</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form > 
-          {/* onSubmit={handleSaveQuestion} */}
+      <Modal show={addQuestionShow} size="md" onHide={handleQuestionClose} centered> 
+        <div className=''>  
+           <button className="btn btn-danger rounded-0 float-end" onClick={handleQuestionClose}><i className="bi bi-x-lg fw-bolder"></i></button> 
+           <h2 className="fs-5 fw-bold mt-3 px-4 text-muted text-center">Ask Question</h2> 
+        </div> 
+        <Modal.Body> 
+        <div className='px-2'>
+          <form onSubmit={handleAddQuestionSubmit} > 
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Question Title
               </label>
               <input
-                // value={createMessage.title}
                 name="title"
-                // onChange={handleMessageChange}
+                onChange={(e) => {setQuestionTitle(e.target.value)}}
                 type="text"
                 className="form-control"
               />
@@ -429,25 +467,15 @@ function CourseDetail() {
                 Question Message
               </label>
               <textarea
-                // value={createMessage.message}
                 name="message"
-                // onChange={handleMessageChange}
+                onChange={(e) => {setQuestion(e.target.value)}}
                 className="form-control"
-                cols="30"
-                rows="10"
+                rows="5"
               ></textarea>
             </div>
-            <button
-              type="button"
-              className="btn btn-secondary me-2"
-              onClick={handleQuestionClose}
-            >
-              <i className="fas fa-arrow-left"></i> Close
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Send Message <i className="fas fa-check-circle"></i>
-            </button>
-          </form>
+            <button type="submit" className="btn btn-primary float-end">Ask Question</button>
+          </form> 
+         </div>
         </Modal.Body>
       </Modal>
     </section>

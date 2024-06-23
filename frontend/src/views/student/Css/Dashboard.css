@@ -90,5 +90,11 @@
   .card-content {
     margin-inline: 3rem;
   } 
-} */
+} */ 
+  
+.chart-container {
+  position: relative;
+  margin: auto;
+
+}
  

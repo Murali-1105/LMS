@@ -22,7 +22,7 @@ const StudentLayout = () => {
          <div className="inner-warpper">
              <Header toggleSidebar={toggleSidebar}  /> 
              <main className='content '>  
-               <Outlet /> 
+               <Outlet/> 
              </main>  
          </div> 
       </div>
