@@ -48,7 +48,7 @@ const Profile = () => {
     };
 
     return ( 
-    <section className="section px-2 px-lg-5 py-4">
+    <section className="section px-0 px-sm-2 px-lg-5 py-4">
         <div className="container-fluid">
             <div className="card shadow-sm py-3 px-2 px-lg-5">
                 <div className="row card-body media d-flex align-items-center justify-content-between mb-4">  
@@ -61,8 +61,8 @@ const Profile = () => {
                         <div className="small mt-2">Allowed JPG or PNG. Max size of 800K</div>
                     </div>   */}  
                     <div className='position-relative'>
-                       <img src={user.user_image} alt="" className="img-fluid ms-3 rounded-circle shadow avatar-xl border p-1" />   
-                       <div className='position-absolute bottom-0 courser-pointer' style={{ right : '0px'}} onChange={handleChange}>   
+                       <img src={user.user_image} alt="user-img" className="img-fluid rounded-circle shadow-sm avatar-xxl border p-1" />   
+                       <div className='position-absolute bottom-0 courser-pointer' style={{ right : '5px'}} onChange={handleChange}>   
                         <label htmlFor="profile-photo"><i class="bi bi-camera-fill fs-4"></i>
                         <input type="file" id="profile-photo" accept="image/*" className='d-none' /></label>
                       </div> 

@@ -4,14 +4,15 @@ import useAxios from "../../utils/useAxios";
 
 function Wishlist() { 
     const [subjects, setSubjects] = useState([]); 
-    const [isLoading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(false); 
     const [error, setError] = useState("");
 
     useEffect(() => {
-            fetchSubjects();
+        fetchSubjects();
     },[]); 
      
-    const fetchSubjects = async () => {
+    const fetchSubjects = async () => { 
+        setLoading(true);
         try {
             const response = await useAxios().get("/user/subject");
             if (response.data && Array.isArray(response.data.subjects)) {
@@ -31,14 +32,15 @@ function Wishlist() {
     return (
         <section className='section px-2 px-lg-5 py-4'>
             <div className='container-fluid'>
-                <h4 className="mt-4 mb-5 text-center"><i className="bi bi-book-half me-2"></i> My Subjects </h4> 
+                <h4 className="mt-4 mb-5 text-center"><i className="bi bi-book-half me-2"></i> My Subjects </h4>  
+
                 {error && <div className="alert alert-danger">{error}</div>}
                 <div className='row'>
-                    {isLoading ? (
-                        Array.from({  length: subjects.length || 6 }).map((_, index) => (
+                    {loading ? (
+                        Array.from({ length: subjects.length }).map((_, index) => (
                             <div key={index} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
                                 <div className="card rounded-4" aria-hidden="true"> 
-                                    <div className='card-img-top placeholder rounded-top-4' alt="Card"  style={{ height: '170px' }}></div>
+                                    <div className='card-img-top placeholder rounded-top-4' alt="Card" style={{ height: '170px' }}></div>
                                     <div className="card-body">
                                         <h5 className="card-title placeholder-glow">
                                             <span className="placeholder col-8"></span>

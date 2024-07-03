@@ -193,12 +193,10 @@ html {
 }
 
 body {
-  font-family: "Poppins", sans-serif;  
   font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(17, 24, 39, 0); 
@@ -260,8 +258,9 @@ small, .small {
  */ 
  
 .avatar-profile {
-  max-width: 150px;
   width: 100%; 
+  height: 100%; 
+  min-height: 120px;
   object-fit: cover;
 }  
  
@@ -464,7 +463,9 @@ h4 {
 
 .sidebar-link.active{
   border-left: solid 4px #fff;
-  background: linear-gradient(to right, #13547ac1, #80d0c7b1);   
+  background: linear-gradient(to right, #13547ac1, #80d0c7b1);    
+  /* background-color: var(--bs-primary-bg-subtle); 
+  color: var(--bs-emphasis-color); */
 }    
 
 #sidebar.collapsed {

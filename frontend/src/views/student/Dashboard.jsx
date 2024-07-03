@@ -32,7 +32,6 @@ function Dashboard() {
     fetchSubjects(); 
   }, []);
   
-  // console.log(subjectProgress);
   
   const fetchSubjects = async () => {  
     setLoading(true);
@@ -167,12 +166,6 @@ function Dashboard() {
         borderWidth: 1,  
         borderColor:"rgba(54, 162, 235, 1)",
       },
-      // {
-      //   label: 'Quiz Mark', 
-      //   data: [11,18,29,30,50],
-      //   backgroundColor: 'rgba(220, 53, 69, 0.9)',  
-      //   borderWidth: 2, 
-      // }, 
     ],
   };   
 
@@ -242,27 +235,27 @@ function Dashboard() {
                     <div className="row">
                      <div className="col-12 col-sm-6 col-xl-4 d-flex">
                          <div className="card flex-fill border shadow-sm primary-subtle">
-                             <div className="p-0">
-                                 <div className="row d-flex align-items-center justify-content-between">
-                                     <div className="col-6 flex-grow-1">
-                                         <div className="p-4">
-                                             <h4 className="fs-5">Welcome Back, {user.username}</h4>
+                             <div className="row g-0">
+                                 <div className="col-8 d-flex align-items-center">
+                                     <div className="card-body flex-grow-1">
+                                         <div className="p-2">
+                                             <h6 className="">Welcome Back, {user.username}</h6>
                                              <p className="mb-0 text-muted">{user.program}</p>
                                          </div>
-                                     </div>
-                                     <div className="col-6">
+                                     </div> 
+                                    </div>
+                                     <div className="col-4">
                                          <img src={user.user_image} className="img-fluid avatar-profile rounded-end-2" alt="user-img" />
                                      </div>
-                                 </div>
                              </div>
                          </div>
                      </div>
                      <div className="col-12 col-sm-6 col-xl-4 d-flex">
                          <div className="card flex-fill border shadow-sm">
-                             <div className="card-body p-4">
+                             <div className="card-body">
                                  <div className="d-flex align-items-center justify-content-between">
-                                     <div className="flex-grow-1">
-                                         <h4 className="mb-2">{subjects.length}</h4>
+                                     <div className="p-3 flex-grow-1">
+                                         <h4 className="mb-1">{subjects.length}</h4>
                                          <p className="mb-0 text-muted">Total Subjects</p>
                                          {/* <div className="mb-0">
                                              <span className="text-muted">
@@ -279,10 +272,10 @@ function Dashboard() {
                          </div>  
                      <div className="col-12 col-sm-6 col-xl-4  d-flex">
                          <div className="card flex-fill border shadow-sm">
-                             <div className="card-body p-4">
+                             <div className="card-body">
                                  <div className="d-flex align-items-center justify-content-between">
-                                     <div className="flex-grow-1">
-                                         <h4 className="mb-2">0</h4>
+                                     <div className="p-3 flex-grow-1">
+                                         <h4 className="mb-1">0</h4>
                                          <p className="mb-0 text-muted">Completed Units</p>
                                          {/* <div className="mb-0">
                                              <span className="text-muted">
@@ -290,11 +283,9 @@ function Dashboard() {
                                              </span>
                                          </div> */}
                                     </div>
-                                    <div className=""> 
-                                        <span className="display-5 text-danger  text-opacity-75 mb-0">
-                                        <i className="bi bi-journal-check"></i>
-                                       </span>
-                                    </div> 
+                                    <div className="">
+                                       <img src="/notebook-svgrepo-com.svg" alt="subject-svg" className="img-fluid avatar-lg" />
+                                    </div>
                                 </div>
                              </div>
                          </div>  
@@ -320,7 +311,7 @@ function Dashboard() {
              <h4 className="my-4"><i className="bi bi-book-half pe-2"></i>My Subjects</h4> 
               <div className='d-flex justify-content-center align-items-center'> 
                  {loading && <p style={{marginTop: '100px'}}> <MainSpinner/> </p>}
-                 {error && <p style={{marginTop: '100px'}}>Error: {error.message} 😔</p>} 
+                 {error && <p style={{marginTop: '100px'}}>{error.message} 😔</p>} 
               </div> 
               <div className="card-container swiper">  
                 <div className="card-content" ref={swiperRef}>
@@ -343,7 +334,7 @@ function Dashboard() {
                                           </div> 
                                            {subject.progress}%
                                         </div>
-                               <Link className="btn btn-primary mt-3 w-100" to={`/student/subject-detail/${subject.id}/${subject.progress}`}>  
+                               <Link className="btn btn-primary mt-3 w-100" to={`/student/subject-detail/${subject.id}/${subject.progress}/${subject.title}`}>  
                                  {subject.buttontext}continue 
                                </Link>
                               </div>

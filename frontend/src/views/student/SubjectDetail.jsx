@@ -187,35 +187,35 @@ function CourseDetail() {
     <>
            <section className='px-2 px-lg-5 py-2'>
              <div className="container-fluid mt-4">
-                 <div className="rounded-2">
-                     <div className="pb-0">
-                        <ul className="d-flex justify-content-center align-items-center" id="course-pills-tab" role="tablist">
-                            <li className="me-2 me-sm-4">
-                              <button className="btn border-0 text-secondary  fw-bold active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
+                 <div className=""> 
+                     <div className="row d-flex align-items-center mb-3">
+                        <h5 className='col-12 col-lg-9 text-uppercase'>{param.title}</h5>
+                        <ul className="col-12 col-lg-3 d-flex" id="course-pills-tab" role="tablist">
+                            <li className="me-2">
+                              <button className="btn border-0 text-secondary fw-bold active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">
                                LESSION
                               </button>
                             </li>
-                            <li className="me-2 me-sm-4">
-                               <button className="btn border-0 text-secondary  fw-bold"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
+                            <li className="me-2">
+                               <button className="btn border-0 text-secondary fw-bold"  id="course-pills-tab-2"  data-bs-toggle="pill"  data-bs-target="#course-pills-2"  type="button"  role="tab"  aria-controls="course-pills-2"  aria-selected="false">
                                 NOTES
                               </button> 
-                              {/* <Link to={'/student/coming-soon'} className='btn border-0 text-secondary  fw-bold'> NOTES
+                              {/* <Link to={'/student/coming-soon'} className='btn border-0 text-secondary fw-bold'> NOTES
                               </Link> */}
                             </li>
-                            <li className="me-2 me-sm-4">
-                              <button className="btn border-0 text-secondary  fw-bold" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
+                            <li>
+                              <button className="btn border-0 text-secondary fw-bold" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">  
                                 DISCUSSION
                               </button>
                             </li>
                         </ul> 
-                     </div>  
+                     </div>   
                  
                  <div className="px-sm-4 pt-sm-0">
                   <div className="tab-content" id="course-pills-tabContent">
                     <div className="tab-pane fade show active"  id="course-pills-1"  role="tabpanel"  aria-labelledby="course-pills-tab-1" > 
-                        <div className="accordion accordion-icon accordion-border" id="accordionExample2"> 
                         {param.progress > 0 && (
-                           <div className="progress mb-4" role="progressbar" aria-label="Animated striped example" aria-valuenow={param.progress} aria-valuemin="0" aria-valuemax="100">
+                          <div className="progress mb-4" role="progressbar" aria-label="striped example" aria-valuenow={param.progress} aria-valuemin="0" aria-valuemax="100">
                              <div className="progress-bar placeholder-wave" style={{ width: `${param.progress}%` }}> 
                                {param.progress}%
                              </div>
@@ -224,36 +224,50 @@ function CourseDetail() {
                       {loading &&  <MainSpinner/> }
                       {error && <p className='mt-5 text-danger'>Error: {error.message}</p>}  
                     </div>
-                   {chapter.map((item, Index) => (
-                      <div className="accordion-item mb-2 border border-2 rounded-3">
-                        <h6 className="accordion-header"  id="heading-1">
-                             <button className="accordion-button fw-bold rounded d-sm-flex d-inline-block collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${Index}`} aria-expanded="true" aria-controls={`collapse-${Index}`}>  
-                               {item.name}
-                             </button> 
-                        </h6>
-                      <div id={`collapse-${Index}`} className="accordion-collapse collapse" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
-                       <div className="accordion-body px-4 px-md-5">
-                         {item.items.map((value, itemIndex) => (
-                          <div className="d-flex justify-content-between align-items-center my-4 my-sm-3 my-lg-2" key={`item-${itemIndex}`}>  
-                           <div className="position-relative d-flex align-items-center justify-content-center">  
-                              <div style={{transform: "rotate(90deg)"}} className='me-3'><i className="bi bi-airplane-fill"></i></div>  
-                              <span className="fs-6 text-baseline">{value.description}</span> 
-                          </div> 
-                          <div className="d-flex justify-content-center align-items-center ms-2 ms-md-4 ms-lg-5">  
-                            <a  className="" onClick={()=> handleShow(value)}><i className="bi bi-play-circle fs-4"></i></a>
-                            <a href={value.ppt} className='ms-3 mx-sm-4'><i className="bi bi-filetype-pdf fs-4"></i></a> 
-                           </div>
-                          </div>))} 
-                          <div className='mt-4 d-flex justify-content-center align-items-center'> 
-                          {attended[item.id] ? (  
-                           <Link to={`/student/quiz-result/${item.id}`} className='btn btn-primary btn-sm m-2' >Test Report</Link> 
-                          ):(
-                           <Link to={`/student/quiz/${item.id}`} className='btn btn-secondary btn-sm m-2' >Start Quiz</Link>)}
-                         </div>
-                       </div>
-                    </div>
-                   </div>))}
-                 </div>
+                    <div className="accordion" id="accordionPanelsStayOpenExample">
+  {chapter.map((item, index) => (
+    <div className="accordion-item mb-2 border" key={`chapter-${index}`}>
+      <h6 className="accordion-header" id={`panelsStayOpen-heading-${index}`}>
+        <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#panelsStayOpen-${index}`} aria-expanded={index === 0 ? "true" : "false"} aria-controls={`panelsStayOpen-${index}`} >
+          {item.name}
+        </button>
+      </h6>
+      <div id={`panelsStayOpen-${index}`} className={`accordion-collapse collapse ${index === 0 ? 'show' : ''}`} aria-labelledby={`panelsStayOpen-heading-${index}`}>
+        <div className="accordion-body">
+          {item.items.map((value, itemIndex) => (
+            <div className="d-flex justify-content-between align-items-center" key={`item-${itemIndex}`} >
+              <div className="position-relative d-flex align-items-center justify-content-center">
+                <div style={{ transform: "rotate(90deg)" }} className="me-3">
+                  <i className="bi bi-airplane-fill"></i>
+                </div>
+                <span className="fs-6 text-baseline">{value.description}</span>
+              </div>
+              <div className="d-flex justify-content-center align-items-center ms-2 ms-md-4 ms-lg-5">
+                <a className="" onClick={() => handleShow(value)}>
+                  <i className="bi bi-play-circle fs-4"></i>
+                </a>
+                <a href={value.ppt} className="ms-3 mx-sm-4">
+                  <i className="bi bi-filetype-pdf fs-4"></i>
+                </a>
+              </div>
+            </div>
+          ))}
+          <div className="mt-4 d-flex justify-content-center align-items-center">
+            {attended[item.id] ? (
+              <Link to={`/student/quiz-result/${item.id}`} className="btn btn-primary btn-sm m-2">
+                Test Report
+              </Link>
+            ) : (
+              <Link to={`/student/quiz/${item.id}`} className="btn btn-primary btn-sm m-2">
+                Start Quiz
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
                </div>
 
                             <div className="tab-pane fade" id="course-pills-2" role="tabpanel" aria-labelledby="course-pills-tab-2">
@@ -352,7 +366,7 @@ function CourseDetail() {
                                             <img src={user.user_image} className="avatar-img rounded-circle" alt="avatar" style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}/>
                                           </div>
                                           <div className="ps-4 vstack mt-3">
-                                            <h6 className="fw-bold"><a href="#" className='text-decoration-none text-dark'>{user.username}</a></h6>
+                                            <h6 className="fw-bold"><a href="#" className='text-decoration-none'>{user.username}</a></h6>
                                             <small>{moment(question.date).format("DD MMM, YYYY")}</small>
                                           </div>
                                         </div>

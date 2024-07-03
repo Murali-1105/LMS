@@ -44,7 +44,7 @@ function App() {
           <Route path='/student/' element={<DefaultLayout />}>
             <Route index element={<StudentDashboard />} />   
             <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="subject-detail/:id/:progress" element={<StudentSubjectDetail/>} />
+            <Route path="subject-detail/:id/:progress/:title" element={<StudentSubjectDetail/>} />
             <Route path="profile/" element={<StudentProfile/>} />
             <Route path="subjects/" element={<StudentSubjects/>} />   
             <Route path='quiz/:chapterid' element={<StudentQuiz/>} /> 
