@@ -1,70 +1,60 @@
 import {Route,Routes,BrowserRouter} from 'react-router-dom'
 import MainWrapper from './layouts/MainWrapper'
 import PrivateRoute from './layouts/PrivateRoute'
-import Register from '../src/views/auth/Register'
+
+
+//base Pages
 import Login from '../src/views/auth/Login'   
 import Logout from '../src/views/auth/Logout'   
 import ForgotPassword from '../src/views/auth/ForgotPassword'   
-import CreateNewPassword from '../src/views/auth/CreateNewPassword'  
- 
-//base Pages
- 
-import Index from "./views/base/Index";
-import CourseDetail from "./views/base/CourseDetail";
-import Cart from "./views/base/Cart";
-import Checkout from "./views/base/Checkout";
-import Success from "./views/base/Success";
-import Search from "./views/base/Search";
- 
+import Error500 from './views/auth/Error500'
+import Error404 from './views/auth/Error404' 
+
 //Student Pages 
-import StudentLayout from './views/student/layout/StudentLayout';
+import DefaultLayout from './views/student/layout/DefaultLayout';
 import StudentDashboard from './views/student/Dashboard' 
-import StudentChangePassword from './views/student/ChangePassword' 
-import StudentCourseDetail from './views/student/CourseDetail' 
-import StudentCourse from './views/student/Courses' 
+import StudentSubjectDetail from './views/student/SubjectDetail' 
 import StudentProfile from './views/student/Profile' 
-import StudentQA from './views/student/QA'  
-import StudentQuiz from './views/student/Quiz'  
-import StudentTicket from './views/student/Tickets'
-import StudentQADetail from './views/student/QADetail' 
-import StudentCourseLectureDetail from './views/student/StudentCourseLectureDetail' 
-import StudentWishlist from './views/student/Wishlist' 
-  
+import StudentQuiz from './views/student/Quiz/Quiz'  
+import StudentTicket from './views/student/Tickets' 
+import StudentCalender from './views/student/Calender' 
+import StudentLeaderBoard from './views/student/LeaderBoard' 
+import StudentInterviewQus from './views/student/InterviewQus'
+import StudentSubjects from './views/student/Subjects'   
+import StudentScorePage from './views/student/Quiz/ScorePage'
+import ChangePassword from './views/student/ResetPassword' 
+import Dev from './views/student/Dev'
+
+
 
 function App() {
   return (
     <BrowserRouter>
       <MainWrapper>
         <Routes>
-          <Route path="/register/"  element={<Register />}  />
-          <Route path="/login/"  element={<Login />}  />   
+         {/* Base Routes */} 
+          <Route path="/"  element={<Login />}/> 
           <Route path="/logout/"  element={<Logout />}  />  
           <Route path="/forgot-password/"  element={<ForgotPassword />}  /> 
-          <Route path="/create-new-password/"  element={<CreateNewPassword />}  />
+          <Route path="/Error500/" element={<Error500/> } /> 
+          <Route path="/Error404/" element={<Error404/>} />
 
-          {/* Base Routes */} 
-          {/* <Route path="/" element={<Index />} />
-          <Route path="/course-detail/:slug/" element={<CourseDetail />} />
-          <Route path="/cart/" element={<Cart />} />
-          <Route path="/checkout/:order_oid/" element={<Checkout />} />
-          <Route path="/payment-success/:order_oid/" element={<Success />}/>
-          <Route path="/search/" element={<Search />} /> */}
-            
-      
-          {/* Student Routes */} 
-          <Route path='/student' element={<StudentLayout />}>
+
+          {/* Student Routes */}  
+          <Route path='/student/' element={<DefaultLayout />}>
             <Route index element={<StudentDashboard />} />   
             <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="courses/" element={<StudentCourse/>} />
-            <Route path="course-detail/:id/:progress" element={<StudentCourseDetail/>} />
-            <Route path="Profile/" element={<StudentProfile/>} />
-            <Route path="wishlist/" element={<StudentWishlist/>} />   
-            <Route path="change-password/" element={<StudentChangePassword/>} />   
-            <Route path='question-answer/' element={<StudentQA/>} /> 
-            <Route path='qa-deatails/' element={<StudentQADetail/>} /> 
-            <Route path='lecture-details/' element={<StudentCourseLectureDetail/>} /> 
+            <Route path="subject-detail/:id/:progress" element={<StudentSubjectDetail/>} />
+            <Route path="profile/" element={<StudentProfile/>} />
+            <Route path="subjects/" element={<StudentSubjects/>} />   
             <Route path='quiz/:chapterid' element={<StudentQuiz/>} /> 
-            <Route path='ticket/' element={<StudentTicket/>} />
+            <Route path='ticket/' element={<StudentTicket/>} /> 
+            <Route path='quiz-result/:chapterid' element={<StudentScorePage/>}></Route>   
+            <Route path='calender' element={<StudentInterviewQus/> }></Route> 
+            <Route path='interview-questions' element={<StudentCalender/> }></Route> 
+            <Route path='leadership-board' element={<StudentLeaderBoard/>}></Route> 
+            <Route path="change-password/" element={<ChangePassword/>} />   
+            <Route path="coming-soon/" element={<Dev/>}></Route> 
           </Route>
         </Routes> 
       </MainWrapper> 

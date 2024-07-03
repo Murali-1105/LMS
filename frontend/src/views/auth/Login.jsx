@@ -1,8 +1,8 @@
 import { login } from '../../utils/auth'  
-import apiInstance from '../../utils/axios' 
-import { useState,useEffect } from 'react'    
+import { useState } from 'react'    
 import { Link,useNavigate } from 'react-router-dom'  
-import "../student/Css/Login.css"
+import {Spinner} from '../../views/components/Spinner'
+import "./Css/Auth.css"
 
 function Login() {
   const[username,setUsername]=useState("");
@@ -27,84 +27,55 @@ function Login() {
   } 
   return (
     <>   
-    <section className="login-container px-3 p-sm-5"> 
-        <div className="row d-flex align-items-center justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-              <div className="login-card my-sm-4 px-4 px-md-5 py-5 rounded-4 shadow-lg ">
-                <div className="mb-4 text-center"> 
-                  <img src="/public/MH_COCKPIT_LOGO.png" alt="MH_COCKPIT" className='img-fluid w-50' />
-                </div>
-                <form className="needs-validation" noValidate="" onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      id="email"
-                      className="form-control"
-                      name="email"
-                      placeholder="johndoe@gmail.com"
-                      required=""
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <div className="invalid-feedback">
-                      Please enter valid username.
-                    </div>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="password" className="form-label">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      id="password"
-                      className="form-control"
-                      name="password"
-                      placeholder="**************"
-                      required=""
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <div className="invalid-feedback">
-                      Please enter valid password.
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-end align-items-center mb-3">
-                 {/*    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="rememberme"
-                        required=""
-                      />
-                      <label className="form-check-label" htmlFor="rememberme">
-                        Remember me
-                      </label> 
-                      <div className="invalid-feedback">
-                        You must agree before submitting.
-                      </div>
-                    </div>*/}
-                    <div>
-                      <Link to="/forgot-password/" className='link-dark'>Forgot password?</Link>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="d-grid">
-                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
-                         {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Sign in'}
-                    </button>
-                    </div> 
-                    <div className='text-center mt-4'> 
-                      <span className='fs-7'> 
-                        Copyright © MH Academy Pvt. Ltd. 2024 
-                       </span>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
+<section className="auth-section bg-dark vh-lg-100 d-flex align-items-center">
+  <div className="container-fluid">
+    <div className="row justify-content-center ">
+      <div className="col-12 d-flex align-items-center justify-content-center">
+        <div className="auth-card rounded-4 px-4 py-5 px-md-5 w-100 fmxw-500">
+          <div className="text-center text-md-center mb-4 mt-md-0">
+            <div className="mb-0 h3"><img src="/MH_COCKPIT_LOGO.png" alt="MH_COCKPIT" className='img-fluid w-100 fmxw-200'/></div>
           </div>
-      </section>
+          <form action="#" className="mt-4" onSubmit={handleSubmit}>
+            <div className="form-group mb-4">
+              <label className='mb-2' htmlFor="email">Username</label>
+              <div className="input-group">
+                <span className="input-group-text" id="basic-addon1"> 
+                  <i class="fa-solid fa-user"></i>
+                 </span>
+                <input type="text" className="form-control" value={username} placeholder="Enter Your Username" id="email"  onChange={(e) => setUsername(e.target.value)} autofocus required />
+              </div>  
+            </div>
+              <div className="form-group mb-4">
+                <label className='mb-2' htmlFor="password">Password</label>
+                <div className="input-group">
+                  <span className="input-group-text" id="basic-addon2">
+                    <i class="fa-solid fa-lock"></i> 
+                  </span>
+                  <input type="password" className="form-control" placeholder="Enter Your Password" value={password}  id="password" onChange={(e) => setPassword(e.target.value)} required />
+                </div>  
+              </div>
+              <div className="d-flex justify-content-between align-items-top mb-4">
+                <div className="form-check">
+                  <input className="form-check-input" type="checkbox" defaultValue id="remember" />
+                  <label className="form-check-label mb-0" htmlFor="remember">
+                    Remember me
+                  </label>
+                </div>
+                <div><Link to="/forgot-password" className="small text-right text-light">Lost password?</Link></div>
+              </div>
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary" disabled={isLoading}>  
+                {isLoading ? <Spinner/> : 'Sign in'} 
+              </button> 
+              <small className='text-center mt-4'>Copyright © MH Cockpit Pvt. Ltd. 2024</small>
+            </div> 
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
     </>
   )
 }

@@ -1,47 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
+import UserData from '../plugin/UserData.js';
 
-const Profile = () => {
-    const [formData, setFormData] = useState({
-        username: 'Murali',
-        firstName: 'Muralivijay',
-        lastName: 'Muralivijay',
-        email: 'Murali@mail.com',
-        phone: '9626659448',
-        birthday: 'May 3, 1995',
-        address: 'knfnnbtrbnrtnbn',
-        gender: 'Male', 
-        state: 'Tamilnadu',
-        country: 'India',
-    });
+const Profile = () => { 
+    const [activeSelect, setActiveSelect] = useState(null);
+    const [error, setError] = useState({});
+    const user = UserData();  
 
-    const [errors, setErrors] = useState({});
+    const handleChange = () => { 
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        const validationErrors = validateForm();
-        if (Object.keys(validationErrors).length === 0) {
-            console.log('Form submitted', formData);
-        } else {
-            setErrors(validationErrors);
-        }
+        e.preventDefault(); 
+
+        if (!validateForm()) { 
+            setError((prevError) => ({ ...prevError, form: 'Please correct the errors before submitting.' }));
+            return;
+        } 
+
+        // Proceed with form submission
+        setError({});
     };
 
     const validateForm = () => {
-        let validationErrors = {};
-        if (!formData.email.includes('@')) {
-            validationErrors.email = 'Invalid email address';
+        let isValid = true;
+        let newError = {};
+
+        if (!userData.email.includes('@')) {
+            newError.email = 'Invalid email address'; 
+            isValid = false;
         }
-        if (formData.phone.length < 10) {
-            validationErrors.phone = 'Phone number must be at least 10 digits';
+        if (userData.phone.length < 10) { 
+            newError.phone = 'Phone number must be at least 10 digits'; 
+            isValid = false;
         }
-        return validationErrors;
-    }; 
-     
-    const [activeSelect, setActiveSelect] = useState(null);
+
+        setError(newError);
+        return isValid;
+    };
 
     const handleSelectClick = (index) => {
         setActiveSelect(index);
@@ -50,115 +46,73 @@ const Profile = () => {
     const handleBlur = () => {
         setActiveSelect(null);
     };
-    
 
     return ( 
     <section className="section px-2 px-lg-5 py-4">
         <div className="container-fluid">
-            <div className="card shadow-lg py-3 px-2 px-lg-5">
+            <div className="card shadow-sm py-3 px-2 px-lg-5">
                 <div className="row card-body media d-flex align-items-center justify-content-between mb-4">  
-                  <div className='col'><h1 className='fw-bold fs-3'>Welcome ,back <br/><span className='text-success'>{formData.username}!</span></h1></div>  
+                  <div className='col'><h1 className='fs-3'>Hi, <br/><span className='fw-bold text-success'>{user.username}</span></h1></div>  
                   <div className='col d-flex align-items-center justify-content-end'>
-                    <div className="media-body text-end ml-4">
+                    {/* <div className="media-body text-end ml-4">
                         <label className="me-2 btn btn-outline-primary btn-sm">
                             Update<input type="file" className="d-none"/>
                         </label>
-                        <button type="button" className="btn btn-outline-secondary btn-sm">Delete</button>
                         <div className="small mt-2">Allowed JPG or PNG. Max size of 800K</div>
-                    </div> 
-                    <img src="/public/student.jpg" alt="" className="ms-3 rounded-circle" style={{ width: '120px', height: '120px' }} /> 
+                    </div>   */}  
+                    <div className='position-relative'>
+                       <img src={user.user_image} alt="" className="img-fluid ms-3 rounded-circle shadow avatar-xl border p-1" />   
+                       <div className='position-absolute bottom-0 courser-pointer' style={{ right : '0px'}} onChange={handleChange}>   
+                        <label htmlFor="profile-photo"><i class="bi bi-camera-fill fs-4"></i>
+                        <input type="file" id="profile-photo" accept="image/*" className='d-none' /></label>
+                      </div> 
+                    </div>
                   </div>
                 </div>
                 <hr className="m-0" />
                 <div className="card-body mt-3">
-                    <h4>Personal Details</h4>
-                    <p className="mb-5">Edit your personal information and address.</p>
+                    <h4 className='mb-5'>Personal Details</h4>
                     <form onSubmit={handleSubmit} noValidate>
                         <div className="row">
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">First Name</label>
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    className="form-control mb-3"
-                                />
+                                <input type="text" name="firstName" value={user.firstName} onChange={handleChange} className="form-control mb-3" />
                             </div>
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">Last Name</label>
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    className="form-control mb-3"
-                                />
+                                <input type="text" name="lastName" value={user.lastName} onChange={handleChange} className="form-control mb-3" />
                             </div>
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">E-mail</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className={`form-control mb-3 ${errors.email ? 'is-invalid' : ''}`}
-                                />
-                                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                                <input type="email" name="email" value={user.email} onChange={handleChange} className={`form-control mb-3 ${error.email ? 'is-invalid' : ''}`}/>
+                                {error.email && <div className="invalid-feedback">{error.email}</div>}
                             </div>
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">Phone</label>
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    className={`form-control mb-3 ${errors.phone ? 'is-invalid' : ''}`}
-                                />
-                                {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                                <input type="text" name="phone" value={user.phone} onChange={handleChange} className={`form-control mb-3 ${error.phone ? 'is-invalid' : ''}`} />
+                                {error.phone && <div className="invalid-feedback">{error.phone}</div>}
                             </div>
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">Date of Birth</label>
-                                <input
-                                    type="date"
-                                    name="birthday"
-                                    value={formData.birthday}
-                                    onChange={handleChange}
-                                    className="form-control mb-3"
-                                />
+                                <input type="date" name="birthday" value={user.birthday} onChange={handleChange} className="form-control mb-3" />
                             </div> 
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">Gender</label> 
                                 <div className="select-wrapper">
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange} 
-                                    onClick={() => handleSelectClick(1)}
-                                    onBlur={handleBlur}
-                                    className="form-control mb-3">
-                                    <option>Select gender</option>
-                                    <option>Male</option>
-                                    <option>Female</option>
+                                <select name="gender" value={user.gender} onChange={handleChange}  onClick={() => handleSelectClick(1)} onBlur={handleBlur} className="form-control mb-3"> <option>Select gender</option> <option>Male</option> <option>Female</option>
                                 </select>  
                                 <i className={`fas fa-chevron-down select-icon ${activeSelect === 1 ? 'rotate' : ''}`}></i> 
                                </div>
                             </div>
                             <div className="form-group col-12">
                                 <label className="form-label">Address</label>
-                                 <textarea className="form-control mb-3" rows="5" name='address'  value={formData.address} onChange={handleChange}> 
+                                 <textarea className="form-control mb-3" rows="5" name='address'  value={user.address} onChange={handleChange}> 
                                  </textarea>
                              </div> 
                              <div className="form-group col-12 col-md-6">
                                 <label className="form-label">State</label> 
                                 <div className="select-wrapper">
-                                <select
-                                    name="state"
-                                    value={formData.state}
-                                    onChange={handleChange}  
-                                    onClick={() => handleSelectClick(2)}
-                                    onBlur={handleBlur}
-                                    className="form-control mb-3">
+                                <select name="state" value={user.state} onChange={handleChange}   onClick={() => handleSelectClick(2)} onBlur={handleBlur} className="form-control mb-3">
                                     <option>Select state</option>
                                     <option>Tamilnadu</option>
                                     <option>UK</option>
@@ -171,13 +125,7 @@ const Profile = () => {
                             <div className="form-group col-12 col-md-6">
                                 <label className="form-label">Country</label> 
                                 <div className="select-wrapper">
-                                <select
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleChange} 
-                                    onClick={() => handleSelectClick(3)}
-                                    onBlur={() => setActiveSelect(false)}
-                                    className="form-control mb-3">
+                                <select name="country" value={user.country} onChange={handleChange}  onClick={() => handleSelectClick(3)} onBlur={() => setActiveSelect(false)} className="form-control mb-3" >
                                     <option>Select country</option>
                                     <option>India</option>
                                     <option>UK</option>
@@ -189,8 +137,8 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className="text-end mt-4">
-                           <button type="button" className="btn btn-primary me-2">Save changes</button>&nbsp;
-                           <button type="button" className="btn btn-secondary">Cancel</button>
+                           <button type="submit" className="btn btn-sm btn-primary me-2">Save changes</button>&nbsp;
+                           <button type="button" className="btn btn-sm btn-secondary">Cancel</button>
                         </div>
                     </form>
                 </div>

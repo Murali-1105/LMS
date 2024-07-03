@@ -54,47 +54,51 @@ const Ticket = () => {
       <section className="section px-2 px-lg-5 py-2">
         <div className="container-fluid">
           <div className="d-flex justify-content-between align-items-center my-4">
-            <h2 className="fs-4 fw-bold">Your Tickets</h2>
+            <h2 className="fs-5 fw-bold">Your Tickets</h2>
             <button className="btn btn-success btn-sm" onClick={handleShow}>
               + Raise Ticket
             </button>
           </div>
-          <div className="my-5">
+          
+          <div class="card shadow-sm my-4">
+           <div class="card-body">
             <div className="table-responsive">
-              <table className="table table-hover table-borderless">
-                <thead>
-                  <tr>
-                    <th scope="col">DATE</th>
-                    <th scope="col">TICKET ID</th>
-                    <th scope="col">TOPIC</th>
-                    <th scope="col">STATUS</th>
+              <table className="table table-hover table-borderless table-centered table-nowrap mb-0 rounded">
+                <thead className="">
+                  <tr className="border-bottom border-secondary">
+                    <th className="rounded-start">DATE</th>
+                    <th className="">TICKET ID</th>
+                    <th className="">TOPIC</th>
+                    <th className=" rounded-end">STATUS</th>
                   </tr>
-                </thead>
+                </thead> 
+                <br/>
                 <tbody>
                   {tickets.map((ticket, index) => (
-                    <tr key={index}>
-                      <th scope="row">{ticket.date}</th>
+                    <tr key={index} >
+                      <td className="pb-3">{ticket.date}</td>
                       <td>{ticket.id}</td>
                       <td>{ticket.title}</td>
-                      <td>{ticket.status}</td>
+                      <td><span className="btn btn-outline-success rounded-pill px-3 py-1">{ticket.status}</span></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
+        </div> 
+       </div>
 
         <Modal size="lg" show={show} onHide={handleClose} centered>  
           <div>
-           <button className="btn btn-danger rounded-0 float-end" onClick={handleClose}><i className="bi bi-x-lg fw-bolder"></i></button> 
+           <button className="btn btn-danger float-end close-btn" onClick={handleClose}><i className="bi bi-x-lg fw-bolder"></i></button> 
           </div> 
         <Modal.Body>
             <div className=""> 
               <h2 className="fs-5 text-center">Create New Ticket</h2> 
             </div>
             <form
-              className={`row needs-validation p-4 ${validated ? "was-validated" : ""}`}
+              className={`row needs-validation py-3 px-1 px-md-4  ${validated ? "was-validated" : ""}`}
               noValidate
               onSubmit={handleCreateTicket}
             >

@@ -10,7 +10,6 @@ export const login = async (username,password) => {
         const {data,status} = await axios.post('user/token/',{
             username,
             password,
-
         });
 
         if (status===200) {

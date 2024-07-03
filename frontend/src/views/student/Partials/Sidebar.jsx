@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; 
+import { NavLink } from "react-router-dom"; 
 
  
 function Sidebar({ collapsed, closeSidebar }) {
@@ -7,32 +7,28 @@ function Sidebar({ collapsed, closeSidebar }) {
     return (  
         <aside id="sidebar" className={collapsed ? "collapsed" : ""}> 
             <div className="sidebar-logo m-4">
-                <a href="#"><img src="/public/MH_COCKPIT_LOGO.png" alt="" className='img-fluid' /></a>
+                <a href="#"><img src="/MH_COCKPIT_LOGO.png" alt="img" className='img-fluid' /></a>
             </div> 
-            <ul class="sidebar-nav" onClick={closeSidebar}>
-                    <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/dashboard/`} >
-                         <i class="bi bi-grid-1x2-fill pe-2"></i>Dashboard</Link>
+            <ul className="sidebar-nav" onClick={closeSidebar}>
+                    <li className="sidebar-item">
+                        <NavLink className="sidebar-link" to={`/student/dashboard/`} >
+                         <i className="bi bi-grid-1x2-fill pe-2"></i>Dashboard</NavLink>
                     </li>
-                    <li class="sidebar-item" >
-                        <Link class="sidebar-link" to={`/student/wishlist/`}> 
-                        <i class="bi bi-book-half pe-2"></i>MySubjects</Link>
+                    <li className="sidebar-item" >
+                        <NavLink className="sidebar-link" to={`/student/subjects/`}> 
+                        <i className="bi bi-book-half pe-2"></i>MySubjects</NavLink>
                     </li> 
-                    <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student//`}>
-                        <i class="bi bi-list-task pe-2"></i>Daily Task</Link>
+                    <li className="sidebar-item">
+                        <NavLink className="sidebar-link" to={`/student/calender/`}>
+                        <i className="bi bi-calendar-week pe-2"></i>Calender</NavLink>
                     </li>  
-                    <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/`}>
-                        <i class="bi bi-calendar-week pe-2"></i>Calender</Link>
+                    <li className="sidebar-item">
+                        <NavLink className="sidebar-link" to={`/student/interview-questions/`}>
+                        <i className="bi bi-question-circle-fill pe-2"></i>Interview Question</NavLink>
                     </li>  
-                    <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/`}>
-                        <i class="bi bi-question-circle-fill pe-2"></i>Interview Question</Link>
-                    </li>  
-                    <li class="sidebar-item">
-                        <Link class="sidebar-link" to={`/student/`}>
-                        <i class="bi bi-trophy pe-2"></i>Leadership Board</Link>
+                    <li className="sidebar-item">
+                        <NavLink className="sidebar-link" to={`/student/leadership-board/`}>
+                        <i className="bi bi-trophy pe-2"></i>Leadership Board</NavLink>
                     </li> 
                 </ul> 
         </aside> 

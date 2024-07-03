@@ -5,9 +5,8 @@ const PrivateRoute = ({children}) => {
     const { isLoggedIn, role }=useAuthStore((state) => ({ isLoggedIn: state.isLoggedIn, role: state.role,}));
     // return loggedIn ? <>{children}</> : <Navigate to ='/Dashboard/' />;
  
-    return !isLoggedIn ? ( <Navigate to='/login' />  
+    return !isLoggedIn ? ( <Navigate to='/' />  
        ): role === 'student' ? ( <Navigate to='/student/dashboard' /> 
-       ): role === 'teacher' ? ( <Navigate to='/instuctor/dashboard' /> 
        ): ( <>{children}</>); 
     };
 
