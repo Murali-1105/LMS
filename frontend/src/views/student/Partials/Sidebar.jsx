@@ -1,36 +1,56 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; 
+import { NavLink, Link } from "react-router-dom"; 
 
  
 function Sidebar({ collapsed, closeSidebar }) {
 
     return (  
         <aside id="sidebar" className={collapsed ? "collapsed" : ""}> 
-            <div className="sidebar-logo m-4">
-                <a href="#"><img src="/MH_COCKPIT_LOGO.png" alt="img" className='img-fluid' /></a>
-            </div> 
-            <ul className="sidebar-nav" onClick={closeSidebar}>
-                    <li className="sidebar-item">
-                        <NavLink className="sidebar-link" to={`/student/dashboard/`} >
-                         <i className="bi bi-grid-1x2-fill pe-2"></i>Dashboard</NavLink>
-                    </li>
-                    <li className="sidebar-item" >
-                        <NavLink className="sidebar-link" to={`/student/subjects/`}> 
-                        <i className="bi bi-book-half pe-2"></i>MySubjects</NavLink>
-                    </li> 
-                    <li className="sidebar-item">
-                        <NavLink className="sidebar-link" to={`/student/calender/`}>
-                        <i className="bi bi-calendar-week pe-2"></i>Calender</NavLink>
-                    </li>  
-                    <li className="sidebar-item">
-                        <NavLink className="sidebar-link" to={`/student/interview-questions/`}>
-                        <i className="bi bi-question-circle-fill pe-2"></i>Interview Question</NavLink>
-                    </li>  
-                    <li className="sidebar-item">
-                        <NavLink className="sidebar-link" to={`/student/leadership-board/`}>
-                        <i className="bi bi-trophy pe-2"></i>Leadership Board</NavLink>
-                    </li> 
-                </ul> 
+            <div className="sidebar-header">
+                <Link to="/student/dashboard/"> 
+                    <div className="logo-sm">  
+                      <img src= "/wings-red.png" alt="img-wings" className="w-75 mx-2 my-4" /> 
+                    </div> 
+                    <div className="logo-lg">
+                      <img src="/MH_COCKPIT_LOGO.png" alt="img-mhcockpit" /> 
+                   </div>
+                </Link> 
+                <button style={{marginTop:'-5px'}} className="btn btn-sm btn-outline-primary d-md-none me-3" onClick={closeSidebar}><i className="bi bi-x-lg"></i></button>
+            </div>  
+            <div>
+            <ul className="sidebar-nav">
+                <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to={`/student/dashboard/`} >
+                     <span><i className="bi bi-grid-1x2-fill fs-5"></i></span> 
+                     <p className="mb-0">Dashboard </p> 
+                    </NavLink>
+                </li>
+                <li className="sidebar-item" >
+                    <NavLink className="sidebar-link" to={`/student/subjects/`}> 
+                     <span><i className="bi bi-book-half fs-5"></i></span> 
+                     <p className="mb-0">MySubjects</p> 
+                     </NavLink>
+                </li> 
+                <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to={`/student/calender/`}>
+                     <span><i className="bi bi-calendar-week fs-5"></i> </span> 
+                     <p className="mb-0">Calender </p> 
+                     </NavLink>
+                </li>  
+                <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to={`/student/interview-questions/`}>
+                     <span><i className="bi bi-question-circle-fill fs-5"></i> </span> 
+                     <p className="mb-0">Interview Question</p> 
+                     </NavLink>
+                </li>  
+                <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to={`/student/leadership-board/`}>
+                     <span><i className="bi bi-trophy fs-5"></i> </span> 
+                     <p className="mb-0">Leadership Board </p> 
+                     </NavLink>
+                </li> 
+                </ul>  
+            </div>
         </aside> 
     );
 }

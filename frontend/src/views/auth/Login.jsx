@@ -2,7 +2,10 @@ import { login } from '../../utils/auth'
 import { useState } from 'react'    
 import { Link,useNavigate } from 'react-router-dom'  
 import {Spinner} from '../../views/components/Spinner'
-import "./Css/Auth.css"
+import "./Css/Auth.css" 
+import { userType } from '../../utils/constants'  
+import { useAuthStore } from '../../store/auth'
+ 
 
 function Login() {
   const[username,setUsername]=useState("");
@@ -10,21 +13,33 @@ function Login() {
   const [isLoading,setIsLoading]=useState(false);
 
 
+  const setUser = useAuthStore(state => state.setUser);
+  // const usertype = useAuthStore(state => state.user().usertype);
+ 
+
+
   const navigate=useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const {error} =await login(username,password);
-    if (error){
+    const { data, error } = await login(username, password);
+    const usertype = data?.user_type;
+    if (error) {
       setIsLoading(false);
-      alert(error)
-    }else{  
-        navigate('/student');
-        setIsLoading(false);
+      alert(error);
+    } else {
+      setUser(data);
+        if (usertype === 'student') {
+          navigate('/student/dashboard/');
+        } else if (usertype === 'teacher') {
+          navigate('/teacher/dashboard/');
+        }
+      setIsLoading(false);
     }
+  };
 
-  } 
+  console.log(userType)
   return (
     <>   
 <section className="auth-section bg-dark vh-lg-100 d-flex align-items-center">
@@ -64,7 +79,7 @@ function Login() {
                 <div><Link to="/forgot-password" className="small text-right text-light">Lost password?</Link></div>
               </div>
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary" disabled={isLoading}>  
+              <button type="submit" className="btn btn-primary py-2 border border-1" disabled={isLoading}>  
                 {isLoading ? <Spinner/> : 'Sign in'} 
               </button> 
               <small className='text-center mt-4'>Copyright © MH Cockpit Pvt. Ltd. 2024</small>

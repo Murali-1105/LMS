@@ -1,6 +1,6 @@
 import { useAuthStore } from "../store/auth";
 import axios from './axios'
-import jwt_decode from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import Cookie from "js-cookie"
 import Swal from "sweetalert2"
 
@@ -13,11 +13,10 @@ export const login = async (username,password) => {
         });
 
         if (status===200) {
-            setAuthUser(data.access,data.refresh);
+            setAuthUser(data.access,data.refresh); 
+            const decodedUser = jwtDecode(data.access);
+            return { data: decodedUser, error: null }; 
         }
-
-        return {data,error:null};
-
     } catch (error){
         return {
             data:null,
@@ -27,22 +26,22 @@ export const login = async (username,password) => {
 };
 
 
-export const register = async (full_name,email,password,password2) => {
-    try {
-        const {data} = await axios.post('user/register/',{
-            full_name,email,password,password2
-        });
-        await login(email,password);
-        alert("registration Successful");
-        return {data,error:null};
-    } catch (error) {
-        return {
-            data:null,
-            error:error.response.data.email || "Something went wrong",
-        }
+// export const register = async (full_name,email,password,password2) => {
+//     try {
+//         const {data} = await axios.post('user/register/',{
+//             full_name,email,password,password2
+//         });
+//         await login(email,password);
+//         alert("registration Successful");
+//         return {data,error:null};
+//     } catch (error) {
+//         return {
+//             data:null,
+//             error:error.response.data.email || "Something went wrong",
+//         }
         
-    }
-};
+//     }
+// };
 
 
 export const logout = () => {
@@ -80,8 +79,10 @@ export const setAuthUser = (access_token,refresh_token) => {
         expires: 7,
         secure:true,
     });
-
-    const user =jwt_decode(access_token) ?? null
+    
+    
+    const user =jwtDecode(access_token) ?? null
+    
 
     if (user) { 
         useAuthStore.getState().setUser(user)
@@ -103,7 +104,7 @@ export const getRefreshedToken = async () => {
 
 export const isAccessTokenExpired = (access_token) => {
     try{
-        const decodedToken = jwt_decode(access_token)
+        const decodedToken = jwtDecode(access_token)
         return decodedToken.exp < Date.now()/1000
     }catch(error){
         return true

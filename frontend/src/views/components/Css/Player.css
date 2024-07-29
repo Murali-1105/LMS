@@ -1,0 +1,112 @@
+.VideoPlayerWrapper { 
+  height: 70vh;
+  margin: auto;
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  padding: 0;
+}
+  
+.controls-overlay {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 !important;
+}
+
+.controls-overlay .title,
+.controls-overlay .controls {
+  padding: 0.75rem;
+}
+
+.controls-overlay .title {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.6010154403558299) 25%,
+    rgba(79, 75, 75, 0.5021358885351015) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.controls-overlay .controls {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.7010154403558299) 30%,
+    rgba(79, 75, 75, 0.5021358885351015) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.controls-overlay svg {
+  fill: rgba(255, 255, 255, 0.7);
+  height: 2rem;
+  width: 2rem;
+  cursor: pointer;
+  margin: 0 11px; 
+  animation: none;
+}
+
+.controls-overlay svg:hover {
+  fill: white;
+}
+
+.controls-overlay .speed-control {
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;   
+  font-size: larger;
+}
+
+.controls-overlay .speed-control:hover {
+  color: white !important;
+} 
+ 
+.video-title{ 
+  font-size: x-large; 
+  font-weight: bold;
+} 
+ 
+
+@media (max-width: 768Px){  
+  .VideoPlayerWrapper { 
+    height: 100%;
+  }   
+   
+  .controls-overlay .title,
+.controls-overlay .controls {
+  padding: 0.5rem 0;
+  }
+    
+  .controls-overlay svg {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin: 0 6px; 
+  }  
+    
+  .controls-overlay .speed-control { 
+    font-size: normal;
+  } 
+
+  .video-title{ 
+    font-size: medium; 
+  }
+   
+  .video-timer{ 
+    position: absolute; 
+    top: 0.65rem; 
+    right: 1rem;  
+  }   
+   
+  .video-slider{ 
+    padding-bottom: 0 !important; 
+    padding-top: 15px !important;
+  }   
+
+ } 

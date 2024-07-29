@@ -1,5 +1,5 @@
 import React from 'react' 
-import "./Spinner.css"
+import "./Css/Spinner.css"
 
 export const Spinner = () => {
   return (
@@ -14,8 +14,10 @@ export const Spinner = () => {
 export const MainSpinner = () => { 
 
   return (
-    <div className="d-flex justify-content-center aligan-items-center mt-5">
-     <span className="main-spinner"></span>
+    <div className="d-flex justify-content-center aligan-items-center">
+      <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+      </svg>
     </div>
   )
 }

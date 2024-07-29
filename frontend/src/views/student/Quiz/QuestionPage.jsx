@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import useAxios from '../../../utils/useAxios'; 
 import "../Css/Quiz.css"  
-import { MainSpinner } from '../../components/Spinner';
+import { MainSpinner } from '../../components/Spinner'; 
+import { useNavigate } from 'react-router-dom';  
+import { formatTime } from "../../../assets/Helper";
 
-const QuestionPage = ({ quizidLength, quizid, handleFinalSubmit}) => {
-  const [selectedOption, setSelectedOption] = useState(""); 
+const QuestionPage = ({ quizid, handleFinalSubmit}) => {
+  const [selectedOptions, setSelectedOptions] = useState(Array(quizid.length).fill("")); 
+  const [markedQuestions, setMarkedQuestions] = useState(Array(quizid.length).fill(false));
   const [index, setIndex] = useState(0);
   const [error, setError] = useState(''); 
   const [loading, setLoading] = useState(false); 
-  const [time, setTime] = useState(120*quizidLength);
-  const [question, setQuestion] = useState("");
+  const [time, setTime] = useState(120 * quizid.length);
+  const [question, setQuestion] = useState(""); 
+  const [image, setImage] = useState("");
   const [choiceA, setChoiceA] = useState("");
   const [choiceB, setChoiceB] = useState("");
   const [choiceC, setChoiceC] = useState("");
-  const [choiceD, setChoiceD] = useState("");
-  const [correctAnswer, setCorrectAnswer] = useState("");
-  const [correctAnswerExp, setCorrectAnswerExp] = useState("");
+  const [choiceD, setChoiceD] = useState("");   
+  const navigate = useNavigate(); 
+  
+  useEffect(() => {
+    const handleBeforeUnload = (e) => { 
+      e.preventDefault();
+      e.returnValue = 'Sorry, you cannot reattempt the exam.';  
+      navigate(-1);
+    }; 
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [navigate]);     
 
   useEffect(() => {
-    if (index < quizidLength && time > 0) {
+    if (index < quizid.length && time > 0) {
       const interval = setInterval(() => {
         setTime(prevTime => prevTime - 1);
       }, 1000);
@@ -27,35 +44,33 @@ const QuestionPage = ({ quizidLength, quizid, handleFinalSubmit}) => {
     } else if (time === 0) {
       handleFinalSubmit();
     }
-  }, [time, index, quizidLength, handleFinalSubmit]);
+  }, [time, index, quizid.length, handleFinalSubmit]);
 
   useEffect(() => { 
     const getQuiz = async () => { 
       setLoading(true);
       try {
         const response = await useAxios().get(`user/subject/quiz/${quizid[index]}`);
-        if (response) {
-          setQuestion(response.data.question);
+        if (response) {  
+          setQuestion(response.data.question); 
+          setImage(response.data.question_image);
           setChoiceA(response.data.choice_a);
           setChoiceB(response.data.choice_b);
           setChoiceC(response.data.choice_c);
-          setChoiceD(response.data.choice_d); 
-          setSelectedOption(response.data.selected_Option || "");
-          setCorrectAnswer(response.data.correct_answer);
-          setCorrectAnswerExp(response.data.correct_answerExp);
+          setChoiceD(response.data.choice_d);  
         } else {
-          console.log(response);
+          console.error(response);
         }
       } catch (error) {
         console.error(error);
-      }finally{ 
-        setLoading(false);
+      } finally{ 
+        setLoading(false)
       }
     };
 
     getQuiz();
-  }, [index, quizid]);
-
+  }, [index, quizid]); 
+   
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
@@ -64,25 +79,28 @@ const QuestionPage = ({ quizidLength, quizid, handleFinalSubmit}) => {
       return;
     }
 
-    if (selectedOption === '') {
-      setError('Please select an option!');
-      return;
-    }
-
     const formData = new FormData();
-    formData.append('selected_option', selectedOption);
+    formData.append('selected_option', selectedOptions[index]);
 
     try {
       const response = await useAxios().post(`user/subject/quiz/evaluate/${quizid[index]}`, formData);
 
       if (response.status === 201) {
-        setSelectedOption("");
-        setError('');
-
-        if (index < quizidLength - 1) {
+        if (index < quizid.length - 1) {
           setIndex((prevIndex) => prevIndex + 1);
-        } else {
-          handleFinalSubmit(); 
+        } else {   
+          let allSelected = true;
+          selectedOptions.forEach((option, idx) => {
+            if (option === '') { 
+              setError("Please select an option for each question");
+              allSelected = false;
+            }
+          })  
+          
+          if (allSelected) {  
+            setError('')
+            handleFinalSubmit(); 
+          } 
         }
       } else {
         console.error('Error evaluating quiz:', response);
@@ -90,99 +108,155 @@ const QuestionPage = ({ quizidLength, quizid, handleFinalSubmit}) => {
     } catch (error) {
       console.error(error);
     }
-  }; 
+  };   
+   
+  const handleQuestionChange = async (newIndex) => {
+    if (selectedOptions[index] !== '' && index < quizid.length - 1) {
+      await handleSubmit();
+    }
+    setIndex(newIndex);
+  };
+   
+  const handleOptionChange = (option) => {
+    const updatedOptions = [...selectedOptions];
+    updatedOptions[index] = option;
+    setSelectedOptions(updatedOptions);   
+  };
 
   const handleBack = () => {  
-    if (index > 0) { 
+    if (index > 0) {   
       setIndex((prevIndex) => prevIndex - 1);
     }
   }
 
+  const toggleMarkQuestion = (idx) => {
+    const updatedMarkedQuestions = [...markedQuestions];
+    updatedMarkedQuestions[idx] = !updatedMarkedQuestions[idx];
+    setMarkedQuestions(updatedMarkedQuestions);
+  };
+   
   return (
-    <>
-      <div className="card my-5 rounded-3 shadow h-100">
-        <div className="timer">
-          <div className="progress rounded-top-5" style={{ height: '5px' }}>
-            <div
-              className="progress-bar bg-danger"
-              role="progressbar"
-              style={{ width: `${(time / (120 * quizidLength)) * 100}%` }}
-              aria-valuenow={time}
-              aria-valuemin="0"
-              aria-valuemax={120 * quizidLength}
-            >
+    <> 
+    <div className='row my-4'> 
+      <div className='col-12 col-lg-8'>
+        <div className="card question-box rounded-3 shadow-sm">
+          <div className="timer">
+            <div className="progress rounded-top-5" style={{ height: '5px' }}>
+              <div
+                className="progress-bar bg-danger"
+                role="progressbar"
+                style={{ width: `${(time / (120 * quizid.length)) * 100}%` }}
+                aria-valuenow={time}
+                aria-valuemin="0"
+                aria-valuemax={120 * quizid.length}
+              >
+              </div>
             </div>
           </div>
-        </div>
-        <div className="m-3 m-sm-4">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex">
-              <img src="/wings-red.png" alt="" style={{ width: '50px', height: '50px' }} />
-              <h2 className="fs-6 fw-bold mt-3 ps-2">{index + 1} of {quizidLength} Question</h2>
-            </div>
-            <p className='fs-6 mt-3'><i className="bi bi-clock-history"></i>&nbsp; <span className='text-danger fw-bold time-display'>{Math.floor(time / 60)}:{String(time % 60).padStart(2, '0')}</span></p>
-          </div>
-          <div className="card-body mt-2"> 
-            {loading && <MainSpinner/>}
-            <form>
-              <div className="form-group">
-                <label htmlFor="question1" className="fs-6 mb-2">{index + 1}. {question}</label>
-              </div>
-              <div className="form-check m-3 ">
-                <input
-                  type="radio"
-                  id="option1"
-                  name="options"
-                  className="form-check-input border border-2 border-secondary"
-                  checked={selectedOption === 'A'}
-                  onChange={() => setSelectedOption("A")}
-                />
-                <label htmlFor="option1" className="form-check-label">A) {choiceA}</label>
-              </div>
-              <div className="form-check m-3 ">
-                <input
-                  type="radio"
-                  id="option2"
-                  name="options"
-                  className="form-check-input border border-2 border-secondary"
-                  checked={selectedOption === 'B'}
-                  onChange={() => setSelectedOption("B")}
-                />
-                <label htmlFor="option2" className="form-check-label">B) {choiceB}</label>
-              </div>
-              <div className="form-check m-3 ">
-                <input
-                  type="radio"
-                  id="option3"
-                  name="options"
-                  className="form-check-input border border-2 border-secondary"
-                  checked={selectedOption === 'C'}
-                  onChange={() => setSelectedOption("C")}
-                />
-                <label htmlFor="option3" className="form-check-label">C) {choiceC}</label>
-              </div>
-              <div className="form-check m-3 ">
-                <input
-                  type="radio"
-                  id="option4"
-                  name="options"
-                  className="form-check-input border border-2 border-secondary"
-                  checked={selectedOption === 'D'}
-                  onChange={() => setSelectedOption("D")}
-                />
-                <label htmlFor="option4" className="form-check-label">D) {choiceD}</label>
-              </div>
-              <div className="d-flex justify-content-between align-items-center mt-4">
-                <span>{error && <div className="text-danger fs-6">{error}</div>}</span>  
-                <div>
-                  {index > 0 && <button type="button" className="btn btn-sm btn-secondary px-3 me-3" onClick={handleBack}>Back</button>}
-                  <button type="submit" className="btn btn-sm btn-primary px-3" onClick={handleSubmit}>Next</button> 
+          <div className="mx-3 m-md-4">
+            <div className="d-flex justify-content-between align-items-center">
+              <h2 className="fs-6 fw-bold">{index + 1} of {quizid.length} Question</h2>
+              <p className='fs-6 d-inline' style={{minWidth:'80px'}}>
+                <i className="bi bi-clock-history me-2"></i>
+                <span className='fw-semibold'>   
+                 {formatTime(time)} 
+                  {/* {Math.floor(time / 3600)}:{String(Math.floor((time % 3600) / 60)).padStart(2, '0')}:{String(time % 60).padStart(2, '0')} */}
+                </span>
+              </p>
+            </div> 
+            <div className="card-body position-relative px-1 px-lg-3"> 
+              {loading ? (  
+                <div className='my-5'>
+                  <MainSpinner/> 
                 </div>
+              ) : (
+                <form>
+                  <div className="form-group">
+                    <h6 htmlFor="question1" className="fs-6 mb-4">{question}</h6> 
+                    {image && <img src={image} className='my-2 quiz-img' alt="img" />}
+                  </div> 
+                  <div className="form-check m-3">
+                    <input
+                      type="radio"
+                      id="option1"
+                      name="options"
+                      className="form-check-input border border-2 border-secondary"
+                      checked={selectedOptions[index] === 'A'}
+                      onChange={() => handleOptionChange("A")}
+                    />
+                    <label htmlFor="option1" className="form-check-label">A) {choiceA}</label>
+                  </div>
+                  <div className="form-check m-3">
+                    <input
+                      type="radio"
+                      id="option2"
+                      name="options"
+                      className="form-check-input border border-2 border-secondary"
+                      checked={selectedOptions[index] === 'B'}
+                      onChange={() => handleOptionChange("B")}
+                    />
+                    <label htmlFor="option2" className="form-check-label">B) {choiceB}</label>
+                  </div>
+                  <div className="form-check m-3">
+                    <input
+                      type="radio"
+                      id="option3"
+                      name="options"
+                      className="form-check-input border border-2 border-secondary"
+                      checked={selectedOptions[index] === 'C'}
+                      onChange={() => handleOptionChange("C")}
+                    />
+                    <label htmlFor="option3" className="form-check-label">C) {choiceC}</label>
+                  </div>
+                  <div className="form-check m-3">
+                    <input
+                      type="radio"
+                      id="option4"
+                      name="options"
+                      className="form-check-input border border-2 border-secondary"
+                      checked={selectedOptions[index] === 'D'}
+                      onChange={() => handleOptionChange("D")}
+                    />
+                    <label htmlFor="option4" className="form-check-label">D) {choiceD}</label>
+                  </div> 
+              </form>   
+              )} 
+            </div> 
+               <div className='position-absolute' style={{right:'1rem',bottom:'10px'}}>
+                 <button type="button" className="btn border-0 ms-3" onClick={() => toggleMarkQuestion(index)}>
+                  {markedQuestions[index] ? <i class="bi bi-bookmarks-fill fs-5"></i> : <i class="bi bi-bookmarks fs-5"></i>}
+                 </button> 
+               </div> 
+            <div className="fixed-bottom clear-fix p-3 p-sm-4 p-lg-5 primary-subtle border-top" style={{backgroundColor: 'var(--bs-light)'}}>
+              <div className='float-start error-text'>{error && <small className="text-danger">{error}</small>}</div>  
+              <div className='float-end my-2 mx-4 m-sm-0'> 
+                {index > 0 && <button type="button" className="btn btn-sm btn-secondary px-3 px-md-4 me-3" onClick={handleBack}>Back</button>}  
+                {index < quizid.length -1 ? (
+                  <button type="submit" className="btn btn-sm btn-primary px-3 px-md-4" onClick={handleSubmit}>Next</button> 
+                ) : (
+                  <button type="submit" className="btn btn-sm btn-success px-2 px-md-3" onClick={handleSubmit}>Submit</button>  
+                )}
               </div>
-            </form>
-          </div>
+            </div>
+          </div>    
         </div>
-      </div>
+      </div>   
+      <div className='col-12 col-lg-4 mb-3 mb-sm-5'>
+        <div className='card rounded-3 shadow-sm'>  
+          <div className='card-body quiz-index-body px-2'> 
+            {[...Array(quizid.length).keys()].map((num) => (
+              <div 
+                className={`quiz-index-box rounded-1 ${selectedOptions[num] ? 'selected' : ''} ${error && selectedOptions[num] === '' ? 'unselected' : ''} ${markedQuestions[num] ? 'marked' : ''}`} 
+                key={num} 
+                onClick={() => handleQuestionChange(num)}
+              > 
+                {num + 1} 
+              </div>
+            ))} 
+          </div> 
+        </div> 
+      </div> 
+    </div>
     </>
   );
 };

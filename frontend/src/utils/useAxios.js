@@ -6,22 +6,21 @@ import Cookie from "js-cookie";
 
 const useAxios=() => {
     const accessToken=Cookie.get('access_token');
-    const refreshToken=Cookie.get('refresh_token');
-
+    const refreshToken=Cookie.get('refresh_token'); 
+     
     const axiosInstance =axios.create({
             baseURL:API_BASE_URL,
             headers:{ Authorization: `Bearer ${accessToken}` },
      }); 
      
-    axiosInstance.interceptors.request.use(async (req) => {
-        if (isAccessTokenExpired(accessToken)){
-            const response = await getRefreshedToken(refreshToken);
-            setAuthUser(response.access, response.refresh);
-            req.headers.Authorization = `Bearer ${response.access}`;
-        } 
-
-        return req;
-    });
+     axiosInstance.interceptors.request.use(async (req) => {
+        if (isAccessTokenExpired(accessToken)) { 
+          const response = await getRefreshedToken(refreshToken);
+          setAuthUser(response.access, response.refresh);
+          req.headers.Authorization = `Bearer ${response.access}`;
+        }
+        return req; 
+      });
     return axiosInstance;
 };
 

@@ -5,7 +5,8 @@ import useAxios from "../../utils/useAxios";
 function Wishlist() { 
     const [subjects, setSubjects] = useState([]); 
     const [loading, setLoading] = useState(false); 
-    const [error, setError] = useState("");
+    const [error, setError] = useState(""); 
+ 
 
     useEffect(() => {
         fetchSubjects();
@@ -37,7 +38,7 @@ function Wishlist() {
                 {error && <div className="alert alert-danger">{error}</div>}
                 <div className='row'>
                     {loading ? (
-                        Array.from({ length: subjects.length }).map((_, index) => (
+                        Array.from({ length: subjects.length || 6 }).map((_, index) => (
                             <div key={index} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
                                 <div className="card rounded-4" aria-hidden="true"> 
                                     <div className='card-img-top placeholder rounded-top-4' alt="Card" style={{ height: '170px' }}></div>
@@ -60,11 +61,11 @@ function Wishlist() {
                                 <div className="card rounded-4">
                                     <img src={subject.img} alt="avatar" className="img-fluid card-img-top rounded-top-4" style={{ height: '200px', objectFit: 'cover' }}/>
                                     <div className="card-body">
-                                        <h3 className="card-title fs-6" style={{ height: '30px' }}>{subject.title}</h3>
+                                        <h3 className="card-title fs-6" style={{ height: '10px' }}>{subject.title}</h3>
                                         <div className="mt-5">
                                             <div className="progress" style={{ height: '5px', marginBottom:'5px' }}>
                                                 <div
-                                                    className='progress-bar'
+                                                    className='progress-bar progress-primary'
                                                     role="progressbar"
                                                     style={{ width: `${subject.progress}%` }}
                                                     aria-valuenow={subject.progress}
@@ -74,8 +75,8 @@ function Wishlist() {
                                             </div> 
                                             {subject.progress}%
                                         </div>
-                                        <Link className="btn btn-primary mt-3 w-100" to={`/student/subject-detail/${subject.id}/${subject.progress}`}>  
-                                            {subject.buttontext} continue 
+                                        <Link className="btn btn-primary mt-3 w-100" to={`/student/subject-detail/${subject.id}/${subject.progress}/${subject.title}`}>  
+                                            {subject.buttontext} Continue <i class="bi bi-chevron-double-right" style={{fontSize:'13px'}}></i>
                                         </Link>
                                     </div>
                                 </div>

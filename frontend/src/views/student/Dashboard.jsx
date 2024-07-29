@@ -25,7 +25,12 @@ function Dashboard() {
   const [subjectProgress, setSubjectProgress] = useState([]); 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);  
-  const [hasAnimated, setHasAnimated] = useState(false); 
+  const [hasAnimated, setHasAnimated] = useState(false);  
+   
+   
+  const truncateTitle = (title, length = 8) => {
+    return title.length > length ? `${title.slice(0, length)}...` : title;
+  };
    
   useEffect(() => {
     setHasAnimated(true); 
@@ -101,7 +106,7 @@ function Dashboard() {
    
    
   const data = {
-    labels: subjectTitle,
+    labels: subjectTitle.map(title => truncateTitle(title)),
     datasets: [
       {
         label: 'Total Progress',
@@ -112,7 +117,7 @@ function Dashboard() {
           'rgba(255, 206, 86, 0.8)',
           'rgba(75, 192, 192, 0.8)',
           'rgba(153, 102, 255, 0.8)',
-          'rgba(255, 159, 64, 0.8)',
+          'rgba(201, 203, 207, 0.8)', 
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',
@@ -120,7 +125,7 @@ function Dashboard() {
           'rgba(255, 206, 86, 1)',
           'rgba(75, 192, 192, 1)',
           'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
+          'rgba(201, 203, 207, 1)',
         ],
         borderWidth: 1,
       },
@@ -150,21 +155,25 @@ function Dashboard() {
           font: {
             size: 10,
           }, 
-      
         },
-      },
+      }, 
+      tooltip: {
+        callbacks: {
+          label:subjectTitle,
+        }
+      }
     },
   };  
    
   const data2 = {
-    labels: subjectTitle,
+    labels: subjectTitle.map(title => truncateTitle(title)),
     datasets: [ 
       { 
         label: 'Total Progress',
         data: subjectProgress,
-        backgroundColor: 'rgba(54, 162, 235, 0.8)',  
+        backgroundColor: 'rgba(5, 111, 146,0.5)',  
         borderWidth: 1,  
-        borderColor:"rgba(54, 162, 235, 1)",
+        borderColor:"rgba(5, 111, 146,1)",
       },
     ],
   };   
@@ -183,7 +192,7 @@ function Dashboard() {
               weight: 'bold'
            }, 
         }
-      },  
+      },   
     },  
      
     scales: { 
@@ -230,17 +239,17 @@ function Dashboard() {
  return ( 
      <>   
       <section className="section px-2 px-lg-5 py-4">
-       <div className="container-fluid">  
+       <div className="container">  
             <h4 className="my-4"><i className="bi bi-grid-1x2-fill fs-5 pe-2"></i>Dashboard</h4>
                     <div className="row">
                      <div className="col-12 col-sm-6 col-xl-4 d-flex">
-                         <div className="card flex-fill border shadow-sm primary-subtle">
+                         <div className="card flex-fill border shadow-sm" style={{background:'rgba(5, 111, 146,0.5)', borderColor:'rgb(5, 111, 146)',color:'#fff'}}>
                              <div className="row g-0">
                                  <div className="col-8 d-flex align-items-center">
                                      <div className="card-body flex-grow-1">
                                          <div className="p-2">
                                              <h6 className="">Welcome Back, {user.username}</h6>
-                                             <p className="mb-0 text-muted">{user.program}</p>
+                                             <p className="mb-0 text-muted fw-semibold">{user.program}</p>
                                          </div>
                                      </div> 
                                     </div>
@@ -256,7 +265,7 @@ function Dashboard() {
                                  <div className="d-flex align-items-center justify-content-between">
                                      <div className="p-3 flex-grow-1">
                                          <h4 className="mb-1">{subjects.length}</h4>
-                                         <p className="mb-0 text-muted">Total Subjects</p>
+                                         <p className="mb-0 text-muted fw-semibold">Total Subjects</p>
                                          {/* <div className="mb-0">
                                              <span className="text-muted">
                                               Since Last Month
@@ -276,7 +285,7 @@ function Dashboard() {
                                  <div className="d-flex align-items-center justify-content-between">
                                      <div className="p-3 flex-grow-1">
                                          <h4 className="mb-1">0</h4>
-                                         <p className="mb-0 text-muted">Completed Units</p>
+                                         <p className="mb-0 text-muted fw-semibold">Completed Units</p>
                                          {/* <div className="mb-0">
                                              <span className="text-muted">
                                                  Since Last Month
@@ -324,7 +333,7 @@ function Dashboard() {
                                      <div className="mt-5">
                                          <div className="progress" style={{height: '5px' , marginBottom:'5px'}}>
                                             <div
-                                               className={`progress-bar ${hasAnimated ? 'animate' : ''}`}
+                                               className={`progress-bar progress-primary ${hasAnimated ? 'animate' : ''}`}
                                                role="progressbar"
                                                style={{ width: `${subject.progress}%` }}
                                                aria-valuenow={subject.progress}
@@ -335,7 +344,7 @@ function Dashboard() {
                                            {subject.progress}%
                                         </div>
                                <Link className="btn btn-primary mt-3 w-100" to={`/student/subject-detail/${subject.id}/${subject.progress}/${subject.title}`}>  
-                                 {subject.buttontext}continue 
+                                 {subject.buttontext}Continue <i class="bi bi-chevron-double-right" style={{fontSize:'13px'}}  ></i>
                                </Link>
                               </div>
                             </div>

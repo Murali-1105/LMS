@@ -91,10 +91,32 @@
     margin-inline: 3rem;
   } 
 } */ 
-  
+/*   
 .chart-container {
   position: relative;
   margin: auto;
 
+} */ 
+  
+#react-doc-viewer{ 
+  padding: 0 !important;  
 }
+
+#header-bar{ 
+  display: none !important; 
+} 
+
+#proxy-renderer{ 
+  overflow: hidden !important; 
+  padding: 0 !important; 
+ } 
+  
+#menuEmbeddedControls{  
+  pointer-events: none !important;
+ }  
  
+#WACStatusBarContainer{ 
+  display: none !important;  
+  visibility: none !important; 
+  pointer-events: none !important;
+ }

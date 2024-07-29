@@ -111,12 +111,12 @@ return (
                 <input type="password" value={confirmPassword} placeholder="********" className="form-control" id="confirm-password" onChange={(e) => setConfirmPassword(e.target.value)} />
               </div>  
             </div> 
+            {error && <div className="text-danger text-center">{error}</div>}
             <div className="d-grid">
-              <button type="submit" className="btn btn-secondary mb-3"> 
+              <button type="submit" className="btn btn-primary mt-3"> 
               {loading ? <Spinner/> : 'Reset password'}  
                </button>
             </div>
-            {error && <div className="text-danger text-center">{error}</div>}
           </form>
         </div>  
         </div> 

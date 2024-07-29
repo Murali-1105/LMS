@@ -17,7 +17,9 @@ class MyTokenObtainSerializer(TokenObtainPairSerializer):
         token['user_type']=user.user_type 
         token['user_image'] = settings.BASE_URL+user.user_image.url
         token['college']=user.college.name
-        token['program']=Student.objects.get(user=user).program.name 
+
+        if user.user_type == 'student': 
+            token['program']=Student.objects.get(user=user).program.name 
             
         
         return token

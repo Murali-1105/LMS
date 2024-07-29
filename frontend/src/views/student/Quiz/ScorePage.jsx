@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAxios from '../../../utils/useAxios';
+import { MainSpinner } from '../../components/Spinner';
 
 const ScorePage = () => {
   const { chapterid } = useParams();
   const [quizDetails, setQuizDetails] = useState([]);  
-  const [percentage,setPercentage] = useState(); 
-  
-   
+  const [percentage,setPercentage] = useState();  
+  const [loading,setLoading] = useState(false)
+      
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetchQuizIds(); 
     fetchPercentage();
-  }, [chapterid]);  
+    fetchQuizIds(); 
+  }, []);  
    
    
   const fetchQuizIds = async () => {
+    setLoading(true)
     try {
       const response = await useAxios().get(`user/subject/chapter-quiz-report/${chapterid}`);
       if (response) {
         setQuizDetails(response.data.details);  
-        console.log(response);
       } else {
         console.error(response);
       }
     } catch (error) {
       console.error(error);
+    }finally{ 
+      setLoading(false)
     }
   };
-   
+  
   const fetchPercentage = async () => {  
-    const formData = new FormData();
-    formData.append('chapter_id', chapterid); 
-
     try {
-      const response = await useAxios().post("user/subject/quiz/evaluate_progress/", formData);
-      if (response.status === 201) {
-        setPercentage(response.data.progress); 
+      const response = await useAxios().post("user/subject/quiz/evaluate_progress/", {'chapter_id': chapterid}); 
+      if (response.status === 201) { 
         console.log(response)
+        setPercentage(response.data.progress); 
       } else {
         console.error('Error submitting final progress:', response);
       }
@@ -58,10 +58,11 @@ const ScorePage = () => {
         <h4 className='mt-2'>Test Report</h4> 
        <div className='hstack'> 
          <div> Your Score: <span className='pe-2'>{percentage}%</span></div>
-         <div>{percentage > 80 ? (<small className='text-bg-success bg-opacity-75 rounded-pill px-2 py-1'>Pass</small>):(<small className='text-bg-danger bg-opacity-75 rounded-pill px-2 py-1'>Fail</small>)}</div>
+         <div>{percentage >= 80 ? (<small className='text-bg-success bg-opacity-75 rounded-pill px-2 py-1'>Pass</small>):(<small className='text-bg-danger bg-opacity-75 rounded-pill px-2 py-1'>Fail</small>)}</div>
        </div> 
-      </div>
+      </div> 
     <div className="card score-page p-2 p-lg-3">  
+      {loading && <MainSpinner/> }
       <div className='card-body'> 
       {quizDetails.map((quiz, id) => (
         <div key={id} className="vstack quiz-result"> 
@@ -88,7 +89,7 @@ const ScorePage = () => {
       </div>
     </div>    
     <div className='text-center'>
-      <button className="btn btn-outline-primary mb-5" onClick={handleBack}><i class="bi bi-arrow-left"></i> Back</button> 
+      <button className="btn btn-primary mb-5" onClick={handleBack}><i class="bi bi-arrow-left"></i> Back</button> 
     </div>
    </div>
   </section>
